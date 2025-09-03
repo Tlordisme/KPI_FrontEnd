@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PersonalComponent } from './personal.component';
+import { AssignKpiComponent } from './assign-kpi.component';
 
-describe('PersonalComponent', () => {
-  let component: PersonalComponent;
-  let fixture: ComponentFixture<PersonalComponent>;
+describe('AssignKpiComponent', () => {
+  let component: AssignKpiComponent;
+  let fixture: ComponentFixture<AssignKpiComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PersonalComponent]
+      declarations: [AssignKpiComponent]
     });
-    fixture = TestBed.createComponent(PersonalComponent);
+    fixture = TestBed.createComponent(AssignKpiComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

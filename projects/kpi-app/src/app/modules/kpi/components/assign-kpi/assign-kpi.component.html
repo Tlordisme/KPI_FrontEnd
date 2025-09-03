@@ -1,0 +1,96 @@
+<div class="page-container">
+  <header class="header">
+    <div class="brand" (click)="goDashboard()">
+      <img src="assets/logo.webp" class="logo" alt="Logo trường" />
+      <div class="brand-text">
+        <div class="brand-name">ĐẠI HỌC XÂY DỰNG</div>
+        <div class="brand-sub">Dashboard</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="bell" aria-label="Thông báo">🔔</button>
+      <div class="user">
+        <div class="user-name">{{ principal.name }}</div>
+        <div class="avatar"></div>
+      </div>
+    </div>
+  </header>
+
+  <app-sidebar [sidebarOpen]="sidebarOpen" (toggleSidebarEvent)="toggleSidebar()"></app-sidebar>
+
+
+  <div class="form-card">
+    <div class="form-header">
+      <h2>Giao KPI</h2>
+    </div>
+
+    <section class="form-section">
+      <div class="field-row">
+        <div class="form-field full-width">
+          <label>Chọn Template</label>
+          <div class="input-with-button">
+            <select [(ngModel)]="selectedTemplateId" (change)="onTemplateChange()">
+              <option [value]="null" disabled selected>-- Chọn Template có sẵn --</option>
+              <option *ngFor="let t of templates" [value]="t.id">
+                {{ t.templateName }}
+              </option>
+            </select>
+            <button class="btn-create" (click)="openNewTemplate()">+ Tạo mới</button>
+          </div>
+        </div>
+      </div>
+      <div class="new-template-form" *ngIf="showNewTemplateForm">
+        <div class="form-field">
+          <label>Tên Template mới</label>
+          <input [(ngModel)]="newTemplate.templateName" placeholder="Tên template" />
+        </div>
+        <div class="form-field">
+          <label>Mô tả Template</label>
+          <textarea [(ngModel)]="newTemplate.description" placeholder="Mô tả"></textarea>
+        </div>
+        <div class="form-actions-template">
+          <button class="btn btn-cancel" (click)="cancelNewTemplate()">HỦY</button>
+          <button class="btn btn-primary" (click)="createTemplate()">LƯU</button>
+        </div>
+      </div>
+    </section>
+    <section class="form-section">
+      <div class="field-row">
+        <div class="form-field full-width">
+          <label>Tiêu đề KPI</label>
+          <input [(ngModel)]="item.kpiName" placeholder="Hoàn thành báo cáo tình hình giảng dạy" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="form-field half-width">
+          <label>Loại KPI</label>
+          <select [(ngModel)]="item.kpiType">
+            <option value="Chức năng">Chức năng</option>
+            <option value="Mục tiêu">Mục tiêu</option>
+            <option value="Tuân thủ">Tuân thủ</option>
+          </select>
+        </div>
+        <div class="form-field half-width">
+          <label>Thời gian kết thúc</label>
+          <input type="date" [(ngModel)]="item.deadLine" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="form-field half-width">
+          <label>Công thức tính</label>
+          <input [(ngModel)]="item.calculationFormula" placeholder="VD: (Giá trị thực tế x Trọng số)/Mục tiêu" />
+        </div>
+        <div class="form-field half-width">
+          <label>Trọng số</label>
+          <input type="number" [(ngModel)]="item.weight" placeholder="5" />
+        </div>
+      </div>
+    </section>
+
+    <div class="form-actions">
+      <button class="btn btn-cancel" (click)="goDashboard()">HỦY</button>
+      <button class="btn btn-primary" (click)="createItem()">TIẾP</button>
+    </div>
+  </div>
+</div>
+

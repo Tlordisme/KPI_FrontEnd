@@ -65,7 +65,7 @@ export class AuthService {
     localStorage.removeItem('currentUser');
   }
 
-  // Với JWT, có thể decode để check exp, còn nếu API không trả exp thì chỉ check tồn tại token
+
   isLoggedIn(): boolean {
     return !!this.getToken();
   }

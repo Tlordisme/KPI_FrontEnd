@@ -1,44 +1,39 @@
-// src/app/services/kpi.service.ts
-
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class KpiService {
-  constructor() { }
+  private apiUrl = 'http://localhost:5118/api/Kpi'; // port KPI service
 
-  getQuickStats() {
-    return {
-      kpiToApprove: 23,
-      schoolProgress: 85,
-      strategicKpiAssigned: 12,
-      averageScore: 8.5
-    };
+  constructor(private http: HttpClient, private authService: AuthService) {}
+
+  private getAuthHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      Authorization: `Bearer ${this.authService.getToken()}`,
+    });
   }
 
-  getUnitProgressData() {
-    return [
-      { name: 'Phòng Đào tạo', value: 92 },
-      { name: 'Phòng TCCB', value: 85 },
-      { name: 'Khoa CNTT', value: 78 },
-      { name: 'Khoa Ngoại ngữ', value: 95 }
-    ];
+  // Template
+  getTemplates(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/templates`, {
+      headers: this.getAuthHeaders(),
+    });
   }
 
-  getKpiTypeData() {
-    return [
-      { name: 'KPI Chức năng', value: 60 },
-      { name: 'KPI Mục tiêu', value: 30 },
-      { name: 'KPI Kỷ luật', value: 10 }
-    ];
+  createTemplate(dto: { templateName: string; description: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/templates`, dto, {
+      headers: this.getAuthHeaders(),
+    });
   }
 
-  getApprovalQueue() {
-    return [
-      { unit: 'Khoa CNTT', kpi: 'Tỷ lệ sinh viên có việc làm', status: 'Chờ phê duyệt cuối cùng', lastUpdated: '2025-08-10' },
-      { unit: 'Phòng Đào tạo', kpi: 'Tổ chức hội thảo khoa học', status: 'Chờ phê duyệt cuối cùng', lastUpdated: '2025-08-08' },
-      { unit: 'Phòng TCCB', kpi: 'Tỷ lệ cán bộ được đào tạo', status: 'Chờ phê duyệt cuối cùng', lastUpdated: '2025-08-05' }
-    ];
+  // Item
+  createItem(dto: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/items`, dto, {
+      headers: this.getAuthHeaders(),
+    });
   }
 }

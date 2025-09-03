@@ -1,0 +1,29 @@
+<div class="menu-toggle-wrapper" [class.shift-right]="sidebarOpen">
+  <button class="menu-toggle" (click)="toggleSidebar()">☰</button>
+</div>
+
+<aside class="sidebar" [class.open]="sidebarOpen">
+  <div class="sidebar-header">
+    <img src="assets/logo.webp" class="sidebar-logo" alt="Logo" />
+    <button class="close-sidebar" (click)="toggleSidebar()">✖</button>
+  </div>
+  <nav class="sidebar-nav">
+    <button class="nav-item" routerLink="/dashboard" routerLinkActive="active" (click)="closeSidebar()">🏠 Trang chủ</button>
+
+    <div class="dropdown">
+      <button class="nav-item dropdown-toggle" (click)="toggleDropdown()">
+        <span class="icon">📈</span>
+        Quản lý KPI
+        <span class="arrow" [class.open]="dropdownOpen">▼</span>
+      </button>
+      <div class="dropdown-menu" *ngIf="dropdownOpen">
+        <button class="nav-item sub-item" routerLink="/kpi/assign" routerLinkActive="active" (click)="closeSidebar()">
+          ➕ Giao KPI
+        </button>
+        <button class="nav-item sub-item">✅ Phê duyệt KPI</button>
+        <button class="nav-item sub-item">📊 Xem báo cáo</button>
+        <button class="nav-item sub-item">⬇️ Xuất Excel/PDF</button>
+      </div>
+    </div>
+  </nav>
+</aside>

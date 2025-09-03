@@ -1,14 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService, LoginResponse } from 'projects/kpi-app/src/app/core/services/auth/auth.service';
-
+import {
+  AuthService,
+  LoginResponse,
+} from 'projects/kpi-app/src/app/core/services/auth/auth.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
+
+  dropdownOpen: boolean = false;
   school = {
-    name: 'Trường THPT ABC'
+    name: 'Trường THPT ABC',
   };
 
   principal: any = {
@@ -17,7 +22,7 @@ export class DashboardComponent implements OnInit {
     term: '2020 - 2025',
     email: '',
     phone: '',
-    role: ''
+    role: '',
   };
 
   // Dữ liệu khác vẫn giữ nguyên
@@ -27,34 +32,45 @@ export class DashboardComponent implements OnInit {
     done: 85,
     inProgress: 25,
     ontime: 90,
-    late: 5
+    late: 5,
   };
 
   deputies = [
     { name: 'Phó hiệu trưởng 1', progress: 75, ontime: 40, late: 3 },
-    { name: 'Phó hiệu trưởng 2', progress: 62, ontime: 30, late: 6 }
+    { name: 'Phó hiệu trưởng 2', progress: 62, ontime: 30, late: 6 },
   ];
 
   topUnits = [
     { unit: 'Tổ Toán', progress: 90, ontime: 45, late: 1 },
-    { unit: 'Tổ Văn', progress: 85, ontime: 38, late: 2 }
+    { unit: 'Tổ Văn', progress: 85, ontime: 38, late: 2 },
   ];
 
   weakUnits = [
     { unit: 'Tổ Lý', progress: 55, ontime: 20, late: 5 },
-    { unit: 'Tổ Hóa', progress: 40, ontime: 10, late: 7 }
+    { unit: 'Tổ Hóa', progress: 40, ontime: 10, late: 7 },
   ];
 
   alerts = [
-    { kpi: 'Hoàn thành giáo án', unit: 'Tổ Toán', status: 'Trễ hạn', due: '20/08' },
-    { kpi: 'Báo cáo chuyên đề', unit: 'Tổ Văn', status: 'Đúng hạn', due: '30/08' }
+    {
+      kpi: 'Hoàn thành giáo án',
+      unit: 'Tổ Toán',
+      status: 'Trễ hạn',
+      due: '20/08',
+    },
+    {
+      kpi: 'Báo cáo chuyên đề',
+      unit: 'Tổ Văn',
+      status: 'Đúng hạn',
+      due: '30/08',
+    },
   ];
 
   monthly = [60, 70, 75, 80, 78, 82, 85, 90];
 
   actionsOpen = false;
+  sidebarOpen: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     const user: LoginResponse | null = this.authService.getUser();
@@ -65,13 +81,26 @@ export class DashboardComponent implements OnInit {
         term: '2020 - 2025',
         email: user.email,
         phone: user.phoneNumber,
-        role: user.role
+        role: user.role,
       };
     }
   }
 
+  goAssign() {
+    this.router.navigate(['/kpi/assign']);
+  }
+
   widthPct(val: number): string {
     return `${val}%`;
+  }
+
+  // Thêm phương thức này vào class của component
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
   }
 
   toggleActions() {

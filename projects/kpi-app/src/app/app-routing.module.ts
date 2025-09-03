@@ -12,8 +12,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
+  {
+    path: 'kpi',
+    loadChildren: () =>
+      import('./modules/kpi/kpi.module').then(m => m.KpiModule)
+  },
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
-  { path: 'personal', loadChildren: () => import('./modules/personal/personal.module').then(m => m.PersonalModule) }
+  { path: '**', redirectTo: 'auth/login' }
 ];
 
 @NgModule({

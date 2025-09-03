@@ -1,5 +1,4 @@
 <div class="page">
-  <!-- Header -->
   <header class="header">
     <div class="brand">
       <img src="assets/logo.webp" class="logo" alt="Logo trường" />
@@ -17,23 +16,68 @@
     </div>
   </header>
 
-  <!-- Grid 7 khối -->
-  <main class="grid">
 
-    <!-- (A) Thông tin cá nhân -->
+  <app-sidebar [sidebarOpen]="sidebarOpen" (toggleSidebarEvent)="toggleSidebar()"></app-sidebar>
+
+  <!-- Test -->
+  <!-- <div class="menu-toggle-wrapper" [class.shift-right]="sidebarOpen">
+    <button class="menu-toggle" (click)="toggleSidebar()">☰</button>
+  </div>
+
+  <aside class="sidebar" [class.open]="sidebarOpen">
+    <div class="sidebar-header">
+      <img src="assets/logo.webp" class="sidebar-logo" alt="Logo" />
+      <button class="close-sidebar" (click)="toggleSidebar()">✖</button>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active">🏠 Trang chủ</button>
+
+      <div class="dropdown">
+        <button class="nav-item dropdown-toggle" (click)="toggleDropdown()">
+          <span class="icon">📈</span>
+          Quản lý KPI
+          <span class="arrow" [class.open]="dropdownOpen">▼</span>
+        </button>
+        <div class="dropdown-menu" *ngIf="dropdownOpen">
+          <button class="nav-item sub-item" (click)="goAssign()">
+            ➕ Giao KPI
+          </button>
+          <button class="nav-item sub-item">✅ Phê duyệt KPI</button>
+          <button class="nav-item sub-item">📊 Xem báo cáo</button>
+          <button class="nav-item sub-item">⬇️ Xuất Excel/PDF</button>
+        </div>
+      </div>
+    </nav>
+  </aside> -->
+
+  <!-- EndTesst -->
+
+
+
+
+  <main class="grid">
     <section class="card profile">
       <div class="avatar lg"></div>
       <div class="info">
         <div class="name">{{ principal.name }}</div>
-        <div class="row"><span class="label">Chức vụ:</span> {{ principal.role }}</div>
-        <div class="row"><span class="label">Mã CB:</span> {{ principal.code }}</div>
-        <div class="row"><span class="label">Nhiệm kỳ:</span> {{ principal.term }}</div>
-        <div class="row"><span class="label">Email:</span> {{ principal.email }}</div>
-        <div class="row"><span class="label">Điện thoại:</span> {{ principal.phone }}</div>
+        <div class="row">
+          <span class="label">Chức vụ:</span> {{ principal.role }}
+        </div>
+        <div class="row">
+          <span class="label">Mã CB:</span> {{ principal.code }}
+        </div>
+        <div class="row">
+          <span class="label">Nhiệm kỳ:</span> {{ principal.term }}
+        </div>
+        <div class="row">
+          <span class="label">Email:</span> {{ principal.email }}
+        </div>
+        <div class="row">
+          <span class="label">Điện thoại:</span> {{ principal.phone }}
+        </div>
       </div>
     </section>
 
-    <!-- (B) KPI tổng quan -->
     <section class="card overview">
       <div class="card-title">KPI tổng quan toàn trường</div>
       <div class="overview-wrap">
@@ -68,7 +112,6 @@
       </div>
     </section>
 
-    <!-- (C) Tiến độ theo nhóm Phó Hiệu trưởng -->
     <section class="card deputies">
       <div class="card-title">Tiến độ theo nhóm Phó Hiệu trưởng</div>
       <div class="rows">
@@ -87,17 +130,21 @@
       </div>
     </section>
 
-    <!-- (D) Top đơn vị -->
     <section class="card units">
       <div class="card-title">Top đơn vị</div>
       <div class="table">
         <div class="thead">
-          <div>Đơn vị</div><div>% hoàn thành</div><div>Đúng hạn</div><div>Trễ</div>
+          <div>Đơn vị</div>
+          <div>% hoàn thành</div>
+          <div>Đúng hạn</div>
+          <div>Trễ</div>
         </div>
         <div class="row" *ngFor="let u of topUnits">
           <div class="cell name">{{ u.unit }}</div>
           <div class="cell">
-            <div class="progress"><div class="bar ok" [style.width]="widthPct(u.progress)"></div></div>
+            <div class="progress">
+              <div class="bar ok" [style.width]="widthPct(u.progress)"></div>
+            </div>
             <div class="small muted">{{ u.progress }}%</div>
           </div>
           <div class="cell small">{{ u.ontime }}</div>
@@ -106,17 +153,24 @@
       </div>
     </section>
 
-    <!-- (D’) Đơn vị cần chú ý -->
     <section class="card units">
       <div class="card-title">Đơn vị cần chú ý</div>
       <div class="table">
         <div class="thead">
-          <div>Đơn vị</div><div>% hoàn thành</div><div>Đúng hạn</div><div>Trễ</div>
+          <div>Đơn vị</div>
+          <div>% hoàn thành</div>
+          <div>Đúng hạn</div>
+          <div>Trễ</div>
         </div>
         <div class="row" *ngFor="let u of weakUnits">
           <div class="cell name">{{ u.unit }}</div>
           <div class="cell">
-            <div class="progress"><div class="bar danger" [style.width]="widthPct(u.progress)"></div></div>
+            <div class="progress">
+              <div
+                class="bar danger"
+                [style.width]="widthPct(u.progress)"
+              ></div>
+            </div>
             <div class="small muted">{{ u.progress }}%</div>
           </div>
           <div class="cell small">{{ u.ontime }}</div>
@@ -125,53 +179,63 @@
       </div>
     </section>
 
-    <!-- (E) Cảnh báo KPI -->
     <section class="card alerts">
       <div class="card-title">Cảnh báo KPI</div>
       <div class="table">
         <div class="thead">
-          <div>KPI</div><div>Đơn vị</div><div>Trạng thái</div><div>Hạn</div>
+          <div>KPI</div>
+          <div>Đơn vị</div>
+          <div>Trạng thái</div>
+          <div>Hạn</div>
         </div>
         <div class="row" *ngFor="let a of alerts">
           <div class="cell name">{{ a.kpi }}</div>
           <div class="cell small">{{ a.unit }}</div>
-          <div class="cell small" [class.warn]="a.status==='Trễ hạn'">{{ a.status }}</div>
+          <div class="cell small" [class.warn]="a.status === 'Trễ hạn'">
+            {{ a.status }}
+          </div>
           <div class="cell small">{{ a.due }}</div>
         </div>
       </div>
     </section>
 
-    <!-- (G) Xu hướng theo tháng (SVG đơn giản, không template literal) -->
     <section class="card trend">
       <div class="card-title">Xu hướng hoàn thành theo tháng</div>
       <div class="spark">
         <svg viewBox="0 0 600 180" role="img" aria-label="Xu hướng KPI">
           <line x1="10" y1="150" x2="590" y2="150" class="axis" />
-          <line x1="10" y1="30"  x2="10"  y2="150" class="axis" />
-          <polyline class="line"
+          <line x1="10" y1="30" x2="10" y2="150" class="axis" />
+          <polyline
+            class="line"
             [attr.points]="
-              '10,'  + (150 - (monthly[0]/100)*120) + ' ' +
-              '90,'  + (150 - (monthly[1]/100)*120) + ' ' +
-              '170,' + (150 - (monthly[2]/100)*120) + ' ' +
-              '250,' + (150 - (monthly[3]/100)*120) + ' ' +
-              '330,' + (150 - (monthly[4]/100)*120) + ' ' +
-              '410,' + (150 - (monthly[5]/100)*120) + ' ' +
-              '490,' + (150 - (monthly[6]/100)*120) + ' ' +
-              '570,' + (150 - (monthly[7]/100)*120)
-            ">
-          </polyline>
+              '10,' +
+              (150 - (monthly[0] / 100) * 120) +
+              ' ' +
+              '90,' +
+              (150 - (monthly[1] / 100) * 120) +
+              ' ' +
+              '170,' +
+              (150 - (monthly[2] / 100) * 120) +
+              ' ' +
+              '250,' +
+              (150 - (monthly[3] / 100) * 120) +
+              ' ' +
+              '330,' +
+              (150 - (monthly[4] / 100) * 120) +
+              ' ' +
+              '410,' +
+              (150 - (monthly[5] / 100) * 120) +
+              ' ' +
+              '490,' +
+              (150 - (monthly[6] / 100) * 120) +
+              ' ' +
+              '570,' +
+              (150 - (monthly[7] / 100) * 120)
+            "
+          ></polyline>
         </svg>
         <div class="hint muted">* Mốc: Jan → Aug</div>
       </div>
     </section>
   </main>
-
-  <!-- (F) Floating Action Button -->
-  <button class="fab" (click)="toggleActions()" aria-label="Hành động chính">＋</button>
-  <div class="actions" *ngIf="actionsOpen">
-    <button class="action">➕ Giao KPI</button>
-    <button class="action">✅ Phê duyệt KPI</button>
-    <button class="action">📊 Xem báo cáo</button>
-    <button class="action">⬇️ Xuất Excel/PDF</button>
-  </div>
 </div>
