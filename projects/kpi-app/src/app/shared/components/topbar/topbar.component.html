@@ -1,0 +1,19 @@
+<header class="header">
+    <div class="brand" (click)="goDashboard()">
+      <img src="assets/logo.webp" class="logo" alt="Logo trường" />
+      <div class="brand-text">
+        <div class="brand-name">ĐẠI HỌC XÂY DỰNG</div>
+        <div class="brand-sub">Dashboard</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="user">
+        <div class="avatar"></div>
+        <div class="user-name">{{ principal.name }}</div>
+        <button mat-icon-button (click)="logout()">
+      <mat-icon>logout</mat-icon>
+    </button>
+      </div>
+    </div>
+  </header>
+

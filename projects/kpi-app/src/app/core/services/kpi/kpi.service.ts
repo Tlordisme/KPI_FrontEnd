@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
-
+import { KpiItem } from '../../../modules/kpi/template-kpi/template-kpi.component';
 @Injectable({
   providedIn: 'root',
 })
@@ -23,6 +23,11 @@ export class KpiService {
       headers: this.getAuthHeaders(),
     });
   }
+  getItems(): Observable<any> {
+  return this.http.get(`${this.apiUrl}/items`,{
+    headers:this.getAuthHeaders()
+  });
+}
 
   createTemplate(dto: { templateName: string; description: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/templates`, dto, {
@@ -36,4 +41,15 @@ export class KpiService {
       headers: this.getAuthHeaders(),
     });
   }
+  updateItem(id: number, dto: any) {
+  return this.http.put<KpiItem>(`${this.apiUrl}/items/${id}`, dto,{
+     headers: this.getAuthHeaders()
+  });
+}
+  deleteItem(id: number) {
+  return this.http.delete(`${this.apiUrl}/items/${id}`,{
+    headers: this.getAuthHeaders()
+  });
+}
+  
 }

@@ -1,0 +1,64 @@
+@use '../../../../styles.scss' as *;
+/* Cấu trúc chung */
+.page-container {
+  width: 1440px;
+  min-height: 1024px;
+  margin: 0 auto;
+  padding: 16px;
+  background: #f8fafc;
+  color: #0f172a;
+  box-sizing: border-box;
+}
+.form-card {
+  background-color: $card-bg ;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+.filter-section {
+  margin: 12px 0;
+  input {
+    width: 98%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+}
+
+table {
+  width: 100%; 
+  border-collapse: collapse; 
+  table-layout: fixed; 
+}
+
+th, td {
+  border: 1px solid #e2e8f0;
+  padding: 8px;
+  text-align: left;
+  word-wrap: break-word; 
+}
+.action-col {
+  width: 100px;        
+  text-align: center;
+}
+.id-col{
+    
+    width: 50px;
+    text-align: center;
+}
+td.id-col {
+  text-align: center;
+}
+td.action-col {
+  text-align: center;
+}
+
+.group-header td {
+  text-align: center;     
+  vertical-align: middle;   
+  background-color: #f1f5f9;
+  font-weight: bold;
+}
+
+}

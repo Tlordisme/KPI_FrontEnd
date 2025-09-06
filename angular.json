@@ -30,6 +30,7 @@
               "projects/kpi-app/src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "projects/kpi-app/src/styles.scss"
             ],
             "scripts": []
@@ -93,6 +94,7 @@
               "projects/kpi-app/src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "projects/kpi-app/src/styles.scss"
             ],
             "scripts": []

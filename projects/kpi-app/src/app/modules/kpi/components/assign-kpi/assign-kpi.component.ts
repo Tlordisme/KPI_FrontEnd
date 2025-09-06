@@ -104,7 +104,7 @@ export class AssignKpiComponent implements OnInit {
 
     this.kpiService.createItem(dto).subscribe(() => {
       alert('✅ Tạo KPI thành công');
-      this.router.navigate(['/dashboard']);
+      this.item = { kpiName: "", kpiType: "Chức năng", deadLine:"",weight:0,calculationFormula:""};
     });
   }
 }

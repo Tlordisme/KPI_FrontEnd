@@ -18,9 +18,11 @@
       </button>
       <div class="dropdown-menu" *ngIf="dropdownOpen">
         <button class="nav-item sub-item" routerLink="/kpi/assign" routerLinkActive="active" (click)="closeSidebar()">
-          ➕ Giao KPI
+          ➕ Tạo KPI
         </button>
         <button class="nav-item sub-item">✅ Phê duyệt KPI</button>
+        <button class="nav-item sub-item" routerLink="/kpi/template" routerLinkActive="active" (click)="closeSidebar()">
+          ⬇️Template KPI</button>
         <button class="nav-item sub-item">📊 Xem báo cáo</button>
         <button class="nav-item sub-item">⬇️ Xuất Excel/PDF</button>
       </div>

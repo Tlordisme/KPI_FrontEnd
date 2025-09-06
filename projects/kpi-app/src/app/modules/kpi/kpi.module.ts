@@ -5,13 +5,16 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 
 import { AssignKpiComponent } from './components/assign-kpi/assign-kpi.component';
+import { TemplateKpiComponent } from './template-kpi/template-kpi.component';
+
 
 const routes: Routes = [
-  { path: 'assign', component: AssignKpiComponent }
+  { path: 'assign', component: AssignKpiComponent },
+  { path: 'template',component:TemplateKpiComponent}
 ];
 
 @NgModule({
-  declarations: [AssignKpiComponent],
+  declarations: [AssignKpiComponent, TemplateKpiComponent],
   imports: [
     CommonModule,
     FormsModule,

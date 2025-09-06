@@ -1,0 +1,84 @@
+<div class="page-container">
+  <app-topbar></app-topbar>
+  <app-sidebar
+    [sidebarOpen]="sidebarOpen"
+    (toggleSidebarEvent)="toggleSidebar()"
+  ></app-sidebar>
+
+  <div class="form-card">
+    <div class="form-header">
+      <h2>Template KPI</h2>
+    </div>
+
+    <!-- Bộ lọc -->
+    <div class="filter-section">
+      <input
+        type="text"
+        placeholder=" Tìm theo Chỉ tiêu đánh giá..."
+        [(ngModel)]="filterText"
+        (input)="applyFilter()"
+      />
+    </div>
+    <!-- Lọc theo KPI Template -->
+    <div class="filter-section">
+      <label for="templateSelect"> Bộ lọc : </label>
+      <select
+        id="templateSelect"
+        [(ngModel)]="selectedTemplateId"
+        (change)="applyFilter()"
+      >
+        <option value="">--Chọn template--</option>
+        <option *ngFor="let tpl of templates" [value]="tpl.id">
+          {{ tpl.templateName }}
+        </option>
+      </select>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="id-col">ID</th>
+          <th>Chỉ tiêu đánh giá</th>
+          <th>Trọng số</th>
+          <th>Công thức tính</th>
+          <th>Hạn chót</th>
+          <th class="action-col">Hành động</th>
+        </tr>
+      </thead>
+
+      <tbody *ngFor="let group of groupedData">
+        <!-- Header nhóm -->
+        <tr class="group-header">
+          <td colspan="6">
+            <strong>{{ group.type }}</strong>
+          </td>
+        </tr>
+
+        <!-- Các item trong nhóm -->
+        <tr *ngFor="let item of group.items">
+          <td class="id-col">{{ item.id }}</td>
+          <td>{{ item.kpiName }}</td>
+          <td>{{ item.weight }}</td>
+          <td>{{ item.calculationFormula }}</td>
+          <td>{{ item.deadLine | date : "dd/MM/yyyy" }}</td>
+          <td>
+            <button mat-icon-button color="primary" (click)="onEdit(item)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="onDelete(item)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <app-form-edit
+    [item]="editItem"
+    [fields]="kpiFields"
+    title="Sửa KPI"
+    (submitEvent)="submitEdit($event)"
+    (cancelEvent)="cancelEdit()"
+  >
+  </app-form-edit>
+</div>
