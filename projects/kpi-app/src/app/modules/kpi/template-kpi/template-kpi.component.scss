@@ -25,6 +25,16 @@
     font-size: 14px;
   }
 }
+  .form-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    h2 {
+      font-size: 28px;
+      font-weight: 500;
+      margin: 0;
+    }
+  }
 
 table {
   width: 100%; 

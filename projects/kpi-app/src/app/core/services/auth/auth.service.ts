@@ -1,6 +1,6 @@
 // src/app/services/auth.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -27,6 +27,11 @@ export class AuthService {
   private apiUrl = 'http://localhost:5006/api/User';
 
   constructor(private http: HttpClient) {}
+  private getAuthHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+  }
 
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, request).pipe(
@@ -70,4 +75,11 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
+
+  getUsers(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}`, {
+      headers: this.getAuthHeaders(),
+    });
+}
+
 }

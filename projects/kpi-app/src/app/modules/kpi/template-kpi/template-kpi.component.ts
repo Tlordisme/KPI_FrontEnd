@@ -160,9 +160,4 @@ onDelete(item: KpiItem) {
   });
 
 }
-logout() {
-  // Xoá token, redirect về trang login
-  localStorage.removeItem('token');
-  this.router.navigate(['/login']);
-}
 }

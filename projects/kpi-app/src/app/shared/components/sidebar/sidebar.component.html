@@ -5,26 +5,72 @@
 <aside class="sidebar" [class.open]="sidebarOpen">
   <div class="sidebar-header">
     <img src="assets/logo.webp" class="sidebar-logo" alt="Logo" />
-    <button class="close-sidebar" (click)="toggleSidebar()">✖</button>
+    <button class="close-sidebar" (click)="toggleSidebar()">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
   <nav class="sidebar-nav">
-    <button class="nav-item" routerLink="/dashboard" routerLinkActive="active" (click)="closeSidebar()">🏠 Trang chủ</button>
+    <button
+      class="nav-item"
+      routerLink="/dashboard"
+      routerLinkActive="active"
+      (click)="closeSidebar()"
+    >
+      <mat-icon>home</mat-icon>
+      Trang chủ
+    </button>
 
     <div class="dropdown">
       <button class="nav-item dropdown-toggle" (click)="toggleDropdown()">
-        <span class="icon">📈</span>
+        <mat-icon>bar_chart</mat-icon>
         Quản lý KPI
         <span class="arrow" [class.open]="dropdownOpen">▼</span>
       </button>
       <div class="dropdown-menu" *ngIf="dropdownOpen">
-        <button class="nav-item sub-item" routerLink="/kpi/assign" routerLinkActive="active" (click)="closeSidebar()">
-          ➕ Tạo KPI
+        <button
+          class="nav-item sub-item"
+          routerLink="/kpi/assign"
+          routerLinkActive="active"
+          (click)="closeSidebar()"
+        >
+          <mat-icon>add</mat-icon>
+          Tạo KPI
         </button>
-        <button class="nav-item sub-item">✅ Phê duyệt KPI</button>
-        <button class="nav-item sub-item" routerLink="/kpi/template" routerLinkActive="active" (click)="closeSidebar()">
-          ⬇️Template KPI</button>
-        <button class="nav-item sub-item">📊 Xem báo cáo</button>
-        <button class="nav-item sub-item">⬇️ Xuất Excel/PDF</button>
+
+        <button class="nav-item sub-item">
+          <mat-icon>check_circle</mat-icon>
+          Phê duyệt KPI
+        </button>
+
+        <button
+          class="nav-item sub-item"
+          routerLink="/kpi/template"
+          routerLinkActive="active"
+          (click)="closeSidebar()"
+        >
+          <mat-icon>view_list</mat-icon>
+          Template KPI
+        </button>
+
+        <button
+          class="nav-item sub-item"
+          routerLink="/kpi/assigement"
+          routerLinkActive="active"
+          (click)="closeSidebar()"
+        >
+          <mat-icon>assignment</mat-icon>
+          Giao KPI
+        </button>
+
+        <button class="nav-item sub-item">
+          <mat-icon>insights</mat-icon>
+          Xem báo cáo
+        </button>
+
+        <button class="nav-item sub-item">
+          <mat-icon>file_download</mat-icon>
+          Xuất Excel/PDF
+        </button>
       </div>
     </div>
   </nav>

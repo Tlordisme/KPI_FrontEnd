@@ -1,0 +1,81 @@
+<div class="page-container">
+  <app-topbar></app-topbar>
+  <app-sidebar
+    [sidebarOpen]="sidebarOpen"
+    (toggleSidebarEvent)="toggleSidebar()"
+  ></app-sidebar>
+
+  <div class="form-card">
+    <div class="form-header">
+      <h2>Giao KPI</h2>
+    </div>
+
+    <section class="form-section">
+      <!-- Người nhận KPI + Đơn vị -->
+      <div class="field-row">
+        <div class="form-field half-width">
+          <label>Người nhận KPI</label>
+          <select [(ngModel)]="selectedUserId" (ngModelChange)="onUserChange()">
+            <option *ngFor="let u of users" [ngValue]="u.id">
+              {{ u.fullName }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-field half-width">
+          <label>Đơn vị</label>
+          <select [(ngModel)]="selectedUnitId">
+            <!-- Nếu user có đơn vị cố định thì hiển thị ra -->
+            <option
+              *ngIf="selectedUserId !== 0 && filteredUnits.length === 0"
+              [value]="0"
+              disabled
+            >
+              {{ selectedUserUnitName }}
+            </option>
+
+            <!-- Nếu có danh sách đơn vị khả dụng -->
+            <option *ngFor="let u of filteredUnits" [ngValue]="u.id">
+              {{ u.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- KPI Item -->
+      <div class="field-row">
+        <div class="form-field full-width">
+          <label>KPI Item</label>
+          <select [(ngModel)]="selectedKpiItemId">
+            <option *ngFor="let kpi of kpiItems" [ngValue]="kpi.id">
+              {{ kpi.kpiName }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Năm + Giá trị mục tiêu + Trọng số đóng góp -->
+      <div class="field-row">
+        <div class="form-field third-width">
+          <label>Năm</label>
+          <input type="number" [(ngModel)]="selectedYear" />
+        </div>
+
+        <div class="form-field third-width">
+          <label>Mục tiêu</label>
+          <input type="number" [(ngModel)]="targetValue" />
+        </div>
+
+        <div class="form-field third-width">
+          <label>Trọng số đóng góp (%)</label>
+          <input type="number" [(ngModel)]="contributionWeight" />
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="btn">
+        <button (click)="createAssignment()">Giao KPI</button>
+      </div>
+    </section>
+  </div>
+</div>
