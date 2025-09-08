@@ -10,7 +10,7 @@ import { Assignment } from '../../../modules/kpi/assigement-kpi/assigement-kpi.c
 })
 export class KpiService {
   private apiUrl = 'http://localhost:5118/api/Kpi'; // port KPI service
-  private url = 'http://localhost:5118/api' 
+  private url = 'http://localhost:5118/api'
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -21,8 +21,20 @@ export class KpiService {
   }
 
   // Template
+  // Template
   getTemplates(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/templates`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  createTemplate(dto: { templateName: string; description: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/templates`, dto, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+  getTemplateById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/templates/${id}`, {
       headers: this.getAuthHeaders(),
     });
   }
@@ -32,11 +44,7 @@ export class KpiService {
   });
 }
 
-  createTemplate(dto: { templateName: string; description: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/templates`, dto, {
-      headers: this.getAuthHeaders(),
-    });
-  }
+
 
   // Item
   createItem(dto: any): Observable<any> {
@@ -44,16 +52,26 @@ export class KpiService {
       headers: this.getAuthHeaders(),
     });
   }
-  updateItem(id: number, dto: any) {
-  return this.http.put<KpiItem>(`${this.apiUrl}/items/${id}`, dto,{
-     headers: this.getAuthHeaders()
-  });
- }
-  deleteItem(id: number) {
-  return this.http.delete(`${this.apiUrl}/items/${id}`,{
-    headers: this.getAuthHeaders()
-  });
- }
+
+  getCreatedItems(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/items/creator`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  // Phương thức mới để cập nhật KPI
+  updateItem(id: number, dto: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/items/${id}`, dto, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  // Phương thức mới để xóa KPI
+  deleteItem(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/items/${id}`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
  // assigement
  createAssignment(assignment: Assignment): Observable<Assignment> {
   return this.http.post<Assignment>(`${this.url}/Assignment`, assignment, {
@@ -69,5 +87,5 @@ export class KpiService {
 
 
 
-  
+
 }

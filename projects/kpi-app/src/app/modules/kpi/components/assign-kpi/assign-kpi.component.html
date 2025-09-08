@@ -16,8 +16,10 @@
     </div>
   </header>
 
-  <app-sidebar [sidebarOpen]="sidebarOpen" (toggleSidebarEvent)="toggleSidebar()"></app-sidebar>
-
+  <app-sidebar
+    [sidebarOpen]="sidebarOpen"
+    (toggleSidebarEvent)="toggleSidebar()"
+  ></app-sidebar>
 
   <div class="form-card">
     <div class="form-header">
@@ -29,28 +31,45 @@
         <div class="form-field full-width">
           <label>Chọn Template</label>
           <div class="input-with-button">
-            <select [(ngModel)]="selectedTemplateId" (change)="onTemplateChange()">
-              <option [value]="null" disabled selected>-- Chọn Template có sẵn --</option>
+            <select
+              [(ngModel)]="selectedTemplateId"
+              (change)="onTemplateChange()"
+            >
+              <option [value]="null" disabled selected>
+                -- Chọn Template có sẵn --
+              </option>
               <option *ngFor="let t of templates" [value]="t.id">
                 {{ t.templateName }}
               </option>
             </select>
-            <button class="btn-create" (click)="openNewTemplate()">+ Tạo mới</button>
+            <button class="btn-create" (click)="openNewTemplate()">
+              + Tạo mới
+            </button>
           </div>
         </div>
       </div>
       <div class="new-template-form" *ngIf="showNewTemplateForm">
         <div class="form-field">
           <label>Tên Template mới</label>
-          <input [(ngModel)]="newTemplate.templateName" placeholder="Tên template" />
+          <input
+            [(ngModel)]="newTemplate.templateName"
+            placeholder="Tên template"
+          />
         </div>
         <div class="form-field">
           <label>Mô tả Template</label>
-          <textarea [(ngModel)]="newTemplate.description" placeholder="Mô tả"></textarea>
+          <textarea
+            [(ngModel)]="newTemplate.description"
+            placeholder="Mô tả"
+          ></textarea>
         </div>
         <div class="form-actions-template">
-          <button class="btn btn-cancel" (click)="cancelNewTemplate()">HỦY</button>
-          <button class="btn btn-primary" (click)="createTemplate()">LƯU</button>
+          <button class="btn btn-cancel" (click)="cancelNewTemplate()">
+            HỦY
+          </button>
+          <button class="btn btn-primary" (click)="createTemplate()">
+            LƯU
+          </button>
         </div>
       </div>
     </section>
@@ -58,7 +77,10 @@
       <div class="field-row">
         <div class="form-field full-width">
           <label>Tiêu đề KPI</label>
-          <input [(ngModel)]="item.kpiName" placeholder="Hoàn thành báo cáo tình hình giảng dạy" />
+          <input
+            [(ngModel)]="item.kpiName"
+            placeholder="Hoàn thành báo cáo tình hình giảng dạy"
+          />
         </div>
       </div>
       <div class="field-row">
@@ -78,7 +100,10 @@
       <div class="field-row">
         <div class="form-field half-width">
           <label>Công thức tính</label>
-          <input [(ngModel)]="item.calculationFormula" placeholder="VD: (Giá trị thực tế x Trọng số)/Mục tiêu" />
+          <input
+            [(ngModel)]="item.calculationFormula"
+            placeholder="VD: (Giá trị thực tế x Trọng số)/Mục tiêu"
+          />
         </div>
         <div class="form-field half-width">
           <label>Trọng số</label>
@@ -91,6 +116,106 @@
       <button class="btn btn-cancel" (click)="goDashboard()">HỦY</button>
       <button class="btn btn-primary" (click)="createItem()">TIẾP</button>
     </div>
+
+    <!-- //KP đã tạo -->
+
+    <div class="created-kpis-card">
+      <h3>Các KPI đã tạo</h3>
+      <div class="kpi-list-container">
+        <div class="template-list">
+          <h4>Template đã tạo</h4>
+          <ul>
+            <li
+              *ngFor="let t of templates"
+              (click)="loadItemsByTemplate(t.id)"
+              [ngClass]="{ 'active-template': t.id === selectedTemplateId }"
+            >
+              {{ t.templateName }}
+            </li>
+          </ul>
+        </div>
+        <div class="item-list" *ngIf="selectedTemplateId">
+          <h4>Các mục tiêu trong Template</h4>
+          <div *ngIf="itemsByTemplate.length > 0; else noItems">
+            <div class="item-card" *ngFor="let item of itemsByTemplate">
+              <h5>{{ item.kpiName }}</h5>
+              <p><strong>Loại:</strong> {{ item.kpiType }}</p>
+              <p>
+                <strong>Hạn chót:</strong>
+                {{ item.deadLine | date : "dd/MM/yyyy" }}
+              </p>
+              <p><strong>Trọng số:</strong> {{ item.weight }}</p>
+              <div class="item-actions">
+                <button class="btn btn-edit" (click)="editItem(item)">
+                  Sửa
+                </button>
+                <button class="btn btn-delete" (click)="deleteItem(item.id)">
+                  Xóa
+                </button>
+              </div>
+            </div>
+          </div>
+          <ng-template #noItems>
+            <p class="no-items-message">
+              Chưa có mục tiêu nào trong template này.
+            </p>
+          </ng-template>
+        </div>
+
+        <div class="form-card" *ngIf="isEditing">
+          <div class="form-header">
+            <h2>Sửa KPI</h2>
+          </div>
+
+          <section class="form-section">
+            <div class="field-row">
+              <div class="form-field full-width">
+                <label>Tiêu đề KPI</label>
+                <input
+                  [(ngModel)]="editingItem.kpiName"
+                  placeholder="Hoàn thành báo cáo tình hình giảng dạy"
+                />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="form-field half-width">
+                <label>Loại KPI</label>
+                <select [(ngModel)]="editingItem.kpiType">
+                  <option value="Chức năng">Chức năng</option>
+                  <option value="Mục tiêu">Mục tiêu</option>
+                  <option value="Tuân thủ">Tuân thủ</option>
+                </select>
+              </div>
+              <div class="form-field half-width">
+                <label>Thời gian kết thúc</label>
+                <input type="date" [(ngModel)]="editingItem.deadLine" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="form-field half-width">
+                <label>Công thức tính</label>
+                <input
+                  [(ngModel)]="editingItem.calculationFormula"
+                  placeholder="VD: (Giá trị thực tế x Trọng số)/Mục tiêu"
+                />
+              </div>
+              <div class="form-field half-width">
+                <label>Trọng số</label>
+                <input
+                  type="number"
+                  [(ngModel)]="editingItem.weight"
+                  placeholder="5"
+                />
+              </div>
+            </div>
+          </section>
+
+          <div class="form-actions">
+            <button class="btn btn-cancel" (click)="cancelEdit()">HỦY</button>
+            <button class="btn btn-primary" (click)="updateItem()">LƯU</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
