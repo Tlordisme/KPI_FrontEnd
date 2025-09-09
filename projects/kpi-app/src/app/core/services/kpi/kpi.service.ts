@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { KpiItem } from '../../../modules/kpi/template-kpi/template-kpi.component';
-import { Assignment } from '../../../modules/kpi/assigement-kpi/assigement-kpi.component';
+import { AssignItemDto } from '../../../modules/kpi/assigement-kpi/assigement-kpi.component';
 
 @Injectable({
   providedIn: 'root',
@@ -43,6 +43,12 @@ export class KpiService {
     headers:this.getAuthHeaders()
   });
 }
+// Thêm phương thức mới để lấy KPI Items theo Template Id
+  getTemplateItems(templateId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/templates/${templateId}/items`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
 
 
 
@@ -72,18 +78,30 @@ export class KpiService {
       headers: this.getAuthHeaders(),
     });
   }
- // assigement
- createAssignment(assignment: Assignment): Observable<Assignment> {
-  return this.http.post<Assignment>(`${this.url}/Assignment`, assignment, {
-    headers: this.getAuthHeaders()
-  });
- }
+// Assignment
+  createAssignment(assignment: any): Observable<any> { // Note: Removed type `Assignment` for flexibility
+    return this.http.post<any>(`${this.url}/Assignment`, assignment, {
+      headers: this.getAuthHeaders(),
+    });
+  }
 
- getUnits(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.url}/Unit/units`, {
-    headers: this.getAuthHeaders(),
-  });
-}
+  getUnits(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}/Unit/units`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  assignItem(dto: AssignItemDto): Observable<any> {
+    return this.http.post(`${this.url}/Assignment/assign-item`, dto, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  // assignTemplate(dto: AssignTemplateDto): Observable<any> {
+  //   return this.http.post(`${this.apiUrl}/assign-template`, dto, {
+  //     headers: this.getAuthHeaders(),
+  //   });
+  // }
 
 
 

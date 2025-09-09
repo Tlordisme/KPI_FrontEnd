@@ -18,8 +18,7 @@ export class AssignKpiComponent implements OnInit {
   itemsByTemplate: any[] = [];
 
   showNewTemplateForm = false;
-  newTemplate = { templateName: '', description: '' };
-
+  newTemplate = { templateName: '', description: '', year: new Date().getFullYear() };
   sidebarOpen: boolean = false;
   item = {
     kpiName: '',
@@ -27,6 +26,7 @@ export class AssignKpiComponent implements OnInit {
     deadLine: '',
     weight: 0,
     calculationFormula: '',
+    targetValue: 0,
   };
   kpiItems: any[] = []; // Chắc chắn khai báo là mảng
 
@@ -86,7 +86,7 @@ export class AssignKpiComponent implements OnInit {
     this.showNewTemplateForm = true;
     this.selectedTemplateId = null;
     this.itemsByTemplate = [];
-    this.newTemplate = { templateName: '', description: '' };
+    this.newTemplate = { templateName: '', description: '' , year: new Date().getFullYear()};
   }
 
   cancelNewTemplate() {
@@ -94,7 +94,7 @@ export class AssignKpiComponent implements OnInit {
   }
 
   createTemplate() {
-    if (!this.newTemplate.templateName || !this.newTemplate.description) {
+    if (!this.newTemplate.templateName || !this.newTemplate.description  || this.newTemplate.year === null) {
       alert('Tên và mô tả template không được để trống.');
       return;
     }
@@ -110,13 +110,27 @@ export class AssignKpiComponent implements OnInit {
       alert('Vui lòng chọn Template trước');
       return;
     }
+    // Kiểm tra các trường cần thiết, bao gồm targetValue
+    if (!this.item.kpiName || !this.item.deadLine || this.item.weight === null || this.item.targetValue === null) {
+      alert('Vui lòng điền đầy đủ thông tin KPI (Tiêu đề, Hạn chót, Trọng số, Giá trị mục tiêu).');
+      return;
+    }
     const dto = {
       ...this.item,
       kpiTemplateId: this.selectedTemplateId,
     };
     this.kpiService.createItem(dto).subscribe(() => {
       alert('✅ Tạo KPI thành công');
-      this.loadTemplatesAndItems(); // Tải lại danh sách sau khi tạo
+      this.loadTemplatesAndItems();
+      // Reset form sau khi tạo thành công
+      this.item = {
+        kpiName: '',
+        kpiType: 'Chức năng',
+        deadLine: '',
+        weight: 0,
+        calculationFormula: '',
+        targetValue: 0,
+      };
     });
   }
 

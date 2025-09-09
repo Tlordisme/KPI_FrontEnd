@@ -39,7 +39,7 @@
                 -- Chọn Template có sẵn --
               </option>
               <option *ngFor="let t of templates" [value]="t.id">
-                {{ t.templateName }}
+                {{ t.templateName }} ({{ t.year }})
               </option>
             </select>
             <button class="btn-create" (click)="openNewTemplate()">
@@ -62,6 +62,14 @@
             [(ngModel)]="newTemplate.description"
             placeholder="Mô tả"
           ></textarea>
+        </div>
+        <div class="form-field">
+          <label>Năm</label>
+          <input
+            type="number"
+            [(ngModel)]="newTemplate.year"
+            placeholder="Năm (VD: 2024)"
+          />
         </div>
         <div class="form-actions-template">
           <button class="btn btn-cancel" (click)="cancelNewTemplate()">
@@ -99,15 +107,26 @@
       </div>
       <div class="field-row">
         <div class="form-field half-width">
-          <label>Công thức tính</label>
+          <label>Giá trị mục tiêu</label>
           <input
-            [(ngModel)]="item.calculationFormula"
-            placeholder="VD: (Giá trị thực tế x Trọng số)/Mục tiêu"
+            type="number"
+            [(ngModel)]="item.targetValue"
+            placeholder="VD: 100"
           />
         </div>
         <div class="form-field half-width">
           <label>Trọng số</label>
           <input type="number" [(ngModel)]="item.weight" placeholder="5" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="form-field full-width">
+
+          <label>Công thức tính</label>
+          <input
+            [(ngModel)]="item.calculationFormula"
+            placeholder="VD: (Giá trị thực tế x Trọng số)/Mục tiêu"
+          />
         </div>
       </div>
     </section>
@@ -116,8 +135,6 @@
       <button class="btn btn-cancel" (click)="goDashboard()">HỦY</button>
       <button class="btn btn-primary" (click)="createItem()">TIẾP</button>
     </div>
-
-    <!-- //KP đã tạo -->
 
     <div class="created-kpis-card">
       <h3>Các KPI đã tạo</h3>
@@ -145,6 +162,7 @@
                 {{ item.deadLine | date : "dd/MM/yyyy" }}
               </p>
               <p><strong>Trọng số:</strong> {{ item.weight }}</p>
+              <p><strong>Giá trị mục tiêu:</strong> {{ item.targetValue }}</p>
               <div class="item-actions">
                 <button class="btn btn-edit" (click)="editItem(item)">
                   Sửa
@@ -193,10 +211,11 @@
             </div>
             <div class="field-row">
               <div class="form-field half-width">
-                <label>Công thức tính</label>
+                <label>Giá trị mục tiêu</label>
                 <input
-                  [(ngModel)]="editingItem.calculationFormula"
-                  placeholder="VD: (Giá trị thực tế x Trọng số)/Mục tiêu"
+                  type="number"
+                  [(ngModel)]="editingItem.targetValue"
+                  placeholder="VD: 100"
                 />
               </div>
               <div class="form-field half-width">
@@ -205,6 +224,15 @@
                   type="number"
                   [(ngModel)]="editingItem.weight"
                   placeholder="5"
+                />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="form-field full-width">
+                <label>Công thức tính</label>
+                <input
+                  [(ngModel)]="editingItem.calculationFormula"
+                  placeholder="VD: (Giá trị thực tế x Trọng số)/Mục tiêu"
                 />
               </div>
             </div>
