@@ -3,14 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { KpiItem } from '../../../modules/kpi/template-kpi/template-kpi.component';
-import { Assignment } from '../../../modules/kpi/assigement-kpi/assigement-kpi.component';
+import { AssignItemDto } from '../../../modules/kpi/assigement-kpi/assigement-kpi.component';
 
 @Injectable({
   providedIn: 'root',
 })
 export class KpiService {
   private apiUrl = 'http://localhost:5118/api/Kpi'; // port KPI service
-  private url = 'http://localhost:5118/api' 
+  private url = 'http://localhost:5118/api'
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -21,8 +21,20 @@ export class KpiService {
   }
 
   // Template
+  // Template
   getTemplates(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/templates`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  createTemplate(dto: { templateName: string; description: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/templates`, dto, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+  getTemplateById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/templates/${id}`, {
       headers: this.getAuthHeaders(),
     });
   }
@@ -31,12 +43,14 @@ export class KpiService {
     headers:this.getAuthHeaders()
   });
 }
-
-  createTemplate(dto: { templateName: string; description: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/templates`, dto, {
+// Thêm phương thức mới để lấy KPI Items theo Template Id
+  getTemplateItems(templateId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/templates/${templateId}/items`, {
       headers: this.getAuthHeaders(),
     });
   }
+
+
 
   // Item
   createItem(dto: any): Observable<any> {
@@ -44,30 +58,52 @@ export class KpiService {
       headers: this.getAuthHeaders(),
     });
   }
-  updateItem(id: number, dto: any) {
-  return this.http.put<KpiItem>(`${this.apiUrl}/items/${id}`, dto,{
-     headers: this.getAuthHeaders()
-  });
- }
-  deleteItem(id: number) {
-  return this.http.delete(`${this.apiUrl}/items/${id}`,{
-    headers: this.getAuthHeaders()
-  });
- }
- // assigement
- createAssignment(assignment: Assignment): Observable<Assignment> {
-  return this.http.post<Assignment>(`${this.url}/Assignment`, assignment, {
-    headers: this.getAuthHeaders()
-  });
- }
 
- getUnits(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.url}/Unit/units`, {
-    headers: this.getAuthHeaders(),
-  });
-}
+  getCreatedItems(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/items/creator`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  // Phương thức mới để cập nhật KPI
+  updateItem(id: number, dto: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/items/${id}`, dto, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  // Phương thức mới để xóa KPI
+  deleteItem(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/items/${id}`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+// Assignment
+  createAssignment(assignment: any): Observable<any> { // Note: Removed type `Assignment` for flexibility
+    return this.http.post<any>(`${this.url}/Assignment`, assignment, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  getUnits(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}/Unit/units`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  assignItem(dto: AssignItemDto): Observable<any> {
+    return this.http.post(`${this.url}/Assignment/assign-item`, dto, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  // assignTemplate(dto: AssignTemplateDto): Observable<any> {
+  //   return this.http.post(`${this.apiUrl}/assign-template`, dto, {
+  //     headers: this.getAuthHeaders(),
+  //   });
+  // }
 
 
 
-  
+
 }
