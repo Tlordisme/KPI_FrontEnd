@@ -97,6 +97,16 @@ export class KpiService {
     });
   }
 
+  //Export Template Excel
+
+  exportTemplateToExcel(templateId: number): Observable<Blob> {
+    // Note the 'responseType: "blob"' which is crucial for file downloads
+    return this.http.get(`${this.apiUrl}/export-template/${templateId}`, {
+      headers: this.getAuthHeaders(),
+      responseType: 'blob'
+    });
+  }
+
   // assignTemplate(dto: AssignTemplateDto): Observable<any> {
   //   return this.http.post(`${this.apiUrl}/assign-template`, dto, {
   //     headers: this.getAuthHeaders(),

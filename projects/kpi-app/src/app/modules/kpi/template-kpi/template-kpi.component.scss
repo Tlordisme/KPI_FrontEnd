@@ -1,74 +1,154 @@
 @use '../../../../styles.scss' as *;
-/* Cấu trúc chung */
-.page-container {
-  width: 1440px;
-  min-height: 1024px;
-  margin: 0 auto;
-  padding: 16px;
-  background: #f8fafc;
-  color: #0f172a;
-  box-sizing: border-box;
-}
-.form-card {
-  background-color: $card-bg ;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 
-.filter-section {
-  margin: 12px 0;
-  input {
-    width: 98%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-  }
+.page-container {
+    width: 1440px;
+    min-height: 1024px;
+    margin: 0 auto;
+    padding: 16px;
+    background: #f8fafc;
+    color: #0f172a;
+    box-sizing: border-box;
 }
-  .form-header {
+
+.form-card {
+    background-color: $card-bg;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-header {
     display: flex;
     align-items: center;
     margin-bottom: 30px;
     h2 {
-      font-size: 28px;
-      font-weight: 500;
-      margin: 0;
+        font-size: 28px;
+        font-weight: 500;
+        margin: 0;
     }
-  }
-
-table {
-  width: 100%; 
-  border-collapse: collapse; 
-  table-layout: fixed; 
 }
 
-th, td {
-  border: 1px solid #e2e8f0;
-  padding: 8px;
-  text-align: left;
-  word-wrap: break-word; 
+/* Cải thiện bộ lọc */
+.filter-section {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Thêm khoảng cách giữa các bộ lọc */
+    margin-bottom: 25px;
+
+    input, select {
+        padding: 10px 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        background-color: $input-bg-color;
+        &:focus {
+            outline: none;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+        }
+    }
+
+    input[type="text"] {
+        flex: 1; /* Cho phép input tìm kiếm mở rộng */
+        min-width: 250px;
+    }
+
+    label {
+        font-weight: 600;
+        color: #4a5568;
+    }
+
+    .export-btn {
+        padding: 10px 15px;
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            background-color: #218838;
+            transform: translateY(-1px);
+        }
+
+        &:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+    }
 }
-.action-col {
-  width: 100px;        
-  text-align: center;
+
+/* Thiết kế lại bảng */
+.table {
+    width: 100%;
+    border-collapse: separate; /* Sử dụng separate để tạo khoảng cách giữa các ô */
+    border-spacing: 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden; /* Giúp bo góc cho cả bảng */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
-.id-col{
-    
-    width: 50px;
-    text-align: center;
+
+thead {
+    background-color: #f1f5f9;
+    th {
+        padding: 12px;
+        text-align: left;
+        font-size: 14px;
+        color: #4a5568;
+        font-weight: bold;
+    }
 }
-td.id-col {
-  text-align: center;
-}
-td.action-col {
-  text-align: center;
+
+tbody {
+    tr {
+        background-color: #fff;
+        transition: background-color 0.2s ease;
+        &:hover:not(.group-header) {
+            background-color: #f8fafc;
+        }
+    }
+    td {
+        padding: 12px;
+        border-top: 1px solid #e2e8f0;
+        font-size: 14px;
+        color: #2d3748;
+    }
 }
 
 .group-header td {
-  text-align: center;     
-  vertical-align: middle;   
-  background-color: #f1f5f9;
-  font-weight: bold;
+    background-color: #e2e8f0 !important;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: left;
+    padding: 12px;
+    border-top: 2px solid #cbd5e0;
+    border-bottom: 2px solid #cbd5e0;
+    color: #1a202c;
 }
 
+/* Căn chỉnh các cột */
+.id-col {
+    width: 50px;
+    text-align: center;
+}
+
+.action-col {
+    width: 100px;
+    text-align: center;
+}
+
+/* Nút hành động */
+button[mat-icon-button] {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 4px;
+    transition: transform 0.2s ease;
+    &:hover {
+        transform: scale(1.1);
+    }
 }
