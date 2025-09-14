@@ -175,10 +175,25 @@ export class AssigementKpiComponent implements OnInit {
         error: (err) => {
           errorCount++;
           console.error(`Lỗi khi giao KPI Item ${itemId}:`, err);
-          if (successCount + errorCount === totalItems) {
+
+          // Nếu BE trả về lỗi KPI trùng
+          if (
+            err.error &&
+            err.error.message &&
+            err.error.message.includes('đã được giao')
+          ) {
             alert(
-              `Giao thành công ${successCount} KPI Items. Có ${errorCount} lỗi.`
+              `KPI Item đã được giao cho người dùng này trong năm ${this.selectedYear}.`
             );
+          } else {
+            alert(
+              `Lỗi khi giao KPI Item ${itemId}: ${
+                err.error?.message || 'Không xác định'
+              }`
+            );
+          }
+
+          if (successCount + errorCount === totalItems) {
             this.resetForm();
           }
         },

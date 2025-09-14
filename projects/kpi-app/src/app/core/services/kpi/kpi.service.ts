@@ -4,13 +4,14 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { KpiItem } from '../../../modules/kpi/template-kpi/template-kpi.component';
 import { AssignItemDto } from '../../../modules/kpi/assigement-kpi/assigement-kpi.component';
+import { ApproveKpiAssignmentBulkDto } from '../../../modules/kpi/review-kpi/review-kpi.component';
 
 @Injectable({
   providedIn: 'root',
 })
 export class KpiService {
   private apiUrl = 'http://localhost:5118/api/Kpi'; // port KPI service
-  private url = 'http://localhost:5118/api'
+  private url = 'http://localhost:5118/api';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -28,7 +29,10 @@ export class KpiService {
     });
   }
 
-  createTemplate(dto: { templateName: string; description: string }): Observable<any> {
+  createTemplate(dto: {
+    templateName: string;
+    description: string;
+  }): Observable<any> {
     return this.http.post(`${this.apiUrl}/templates`, dto, {
       headers: this.getAuthHeaders(),
     });
@@ -39,18 +43,19 @@ export class KpiService {
     });
   }
   getItems(): Observable<any> {
-  return this.http.get(`${this.apiUrl}/items`,{
-    headers:this.getAuthHeaders()
-  });
-}
-// Thêm phương thức mới để lấy KPI Items theo Template Id
-  getTemplateItems(templateId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/templates/${templateId}/items`, {
+    return this.http.get(`${this.apiUrl}/items`, {
       headers: this.getAuthHeaders(),
     });
   }
-
-
+  // Thêm phương thức mới để lấy KPI Items theo Template Id
+  getTemplateItems(templateId: number): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.apiUrl}/templates/${templateId}/items`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
 
   // Item
   createItem(dto: any): Observable<any> {
@@ -78,8 +83,9 @@ export class KpiService {
       headers: this.getAuthHeaders(),
     });
   }
-// Assignment
-  createAssignment(assignment: any): Observable<any> { // Note: Removed type `Assignment` for flexibility
+  // Assignment
+  createAssignment(assignment: any): Observable<any> {
+    // Note: Removed type `Assignment` for flexibility
     return this.http.post<any>(`${this.url}/Assignment`, assignment, {
       headers: this.getAuthHeaders(),
     });
@@ -103,17 +109,45 @@ export class KpiService {
     // Note the 'responseType: "blob"' which is crucial for file downloads
     return this.http.get(`${this.apiUrl}/export-template/${templateId}`, {
       headers: this.getAuthHeaders(),
-      responseType: 'blob'
+      responseType: 'blob',
     });
   }
 
-  // assignTemplate(dto: AssignTemplateDto): Observable<any> {
-  //   return this.http.post(`${this.apiUrl}/assign-template`, dto, {
-  //     headers: this.getAuthHeaders(),
-  //   });
-  // }
+  //Get Assignment
+  // Lấy assignments của các thành viên trong đơn vị của tôi
+  getAssignmentsByUnitMembers(year: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}/Assignment/unit-members/${year}`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
 
+  // Lấy assignments của các trưởng đơn vị
+  getUnitAssignments(year: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}/Assignment/units/${year}`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+  //GetALl Kpi Items
+  // Phương thức mới: Lấy tất cả KPI items
+  getAllKpiItems(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/items`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
 
+// Gửi yêu cầu phê duyệt hàng loạt các KPI Assignment
+  approveKpiAssignmentsBulk(dto: ApproveKpiAssignmentBulkDto): Observable<any> {
+    // Gọi endpoint bulk-approve mới
+    return this.http.post(`${this.url}/Approval/bulk-approve`, dto, {
+      headers: this.getAuthHeaders(),
+    });
+  }
 
-
+  // Gửi yêu cầu từ chối hàng loạt các KPI Assignment
+  rejectKpiAssignmentsBulk(dto: ApproveKpiAssignmentBulkDto): Observable<any> {
+    // Gọi endpoint bulk-reject mới
+    return this.http.post(`${this.url}/Approval/bulk-reject`, dto, {
+      headers: this.getAuthHeaders(),
+    });
+  }
 }

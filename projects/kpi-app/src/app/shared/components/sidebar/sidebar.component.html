@@ -37,7 +37,10 @@
           Tạo KPI
         </button>
 
-        <button class="nav-item sub-item">
+        <button class="nav-item sub-item"
+          routerLink="/kpi/review"
+          routerLinkActive="active"
+          (click)="closeSidebar()">
           <mat-icon>check_circle</mat-icon>
           Phê duyệt KPI
         </button>
