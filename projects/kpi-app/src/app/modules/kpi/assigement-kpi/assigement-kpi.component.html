@@ -13,38 +13,52 @@
     <section class="form-section">
       <div class="field-row">
         <div class="form-field half-width">
-          <label>Người nhận KPI</label>
-          <select [(ngModel)]="selectedUserId" (ngModelChange)="onUserChange()">
-            <option [ngValue]="0" disabled selected>-- Chọn người nhận --</option>
-            <option *ngFor="let u of users" [ngValue]="u.id">
-              {{ u.fullName }}
+          <label>Đơn vị</label>
+          <select [(ngModel)]="selectedUnitId" (ngModelChange)="onUnitChange()">
+            <option [ngValue]="0" disabled>-- Chọn đơn vị --</option>
+            <option *ngFor="let u of units" [ngValue]="u.id">
+              {{ u.name }}
             </option>
           </select>
         </div>
 
         <div class="form-field half-width">
-          <label>Đơn vị</label>
-          <select [(ngModel)]="selectedUnitId">
-            <option [ngValue]="0" disabled selected>-- Chọn đơn vị --</option>
-            <option
-              *ngIf="selectedUserId !== 0 && filteredUnits.length === 0"
-              [value]="0"
-              disabled
-            >
-              {{ selectedUserUnitName }}
-            </option>
-            <option *ngFor="let u of filteredUnits" [ngValue]="u.id">
-              {{ u.name }}
-            </option>
-          </select>
-        </div>
+  <label>Người nhận KPI</label>
+  <div class="custom-select" (click)="toggleDropdown($event)">
+    <div class="selected-options">
+      {{ selectedUserId.length ? selectedUserNames.join(', ') : '-- Chọn người nhận --' }}
+    </div>
+
+    <!-- Danh sách dropdown -->
+    <div class="options" *ngIf="dropdownOpen">
+      <div 
+        *ngFor="let u of filteredUsers" 
+        class="option" 
+        (click)="$event.stopPropagation()"
+      >
+        <input 
+          type="checkbox" 
+          [checked]="selectedUserId.includes(u.id)" 
+          (change)="onUserSelectionChange(u.id, $event)" 
+        />
+        {{ u.fullName }}
+      </div>
+    </div>
+  </div>
+</div>
+
       </div>
 
       <div class="field-row">
         <div class="form-field full-width">
           <label>Chọn Template</label>
-          <select [(ngModel)]="selectedTemplateId" (change)="onTemplateChange()">
-            <option [ngValue]="null" disabled selected>-- Chọn Template có sẵn --</option>
+          <select
+            [(ngModel)]="selectedTemplateId"
+            (change)="onTemplateChange()"
+          >
+            <option [ngValue]="null" disabled selected>
+              -- Chọn Template có sẵn --
+            </option>
             <option *ngFor="let t of templates" [ngValue]="t.id">
               {{ t.templateName }} ({{ t.year }})
             </option>
@@ -57,12 +71,15 @@
         <div class="item-list">
           <div *ngFor="let item of itemsByTemplate" class="item-card">
             <div class="item-details">
-              <input type="checkbox"
-                     [checked]="item.isSelected"
-                     (change)="onItemSelectionChange(item.id, $event)"
+              <input
+                type="checkbox"
+                [checked]="item.isSelected"
+                (change)="onItemSelectionChange(item.id, $event)"
               />
               <div class="item-text">
-                <p><strong>{{ item.kpiName }}</strong></p>
+                <p>
+                  <strong>{{ item.kpiName }}</strong>
+                </p>
                 <p>Loại: {{ item.kpiType }}</p>
               </div>
             </div>
@@ -83,7 +100,11 @@
         </div>
         <div class="form-field third-width">
           <label>Trọng số đóng góp (%)</label>
-          <input type="number" [(ngModel)]="contributionWeight" placeholder="Để trống nếu dùng trọng số gốc"/>
+          <input
+            type="number"
+            [(ngModel)]="contributionWeight"
+            placeholder="Để trống nếu dùng trọng số gốc"
+          />
         </div>
       </div>
     </section>

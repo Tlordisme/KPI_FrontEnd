@@ -233,3 +233,41 @@
     padding: 20px;
   }
 }
+.custom-select {
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  padding: 12px;
+  cursor: pointer;
+  position: relative;
+  background: #f2f4f5;
+  user-select: none;
+}
+
+.selected-options {
+  color: #555;
+}
+
+.options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  border: 1px solid #ccc;
+  background: #fff;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.option {
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.option:hover {
+  background: #f5f5f5;
+}

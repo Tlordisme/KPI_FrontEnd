@@ -7,16 +7,18 @@ import { SharedModule } from '../../shared/shared.module';
 import { AssignKpiComponent } from './components/assign-kpi/assign-kpi.component';
 import { TemplateKpiComponent } from './template-kpi/template-kpi.component';
 import { AssigementKpiComponent } from './assigement-kpi/assigement-kpi.component';
+import { EvaluateKpiComponent } from './evaluate-kpi/evaluate-kpi.component';
 
 
 const routes: Routes = [
   { path: 'assign', component: AssignKpiComponent },
   { path: 'template',component:TemplateKpiComponent},
-  { path: 'assigement',component:AssigementKpiComponent}
+  { path: 'assigement',component:AssigementKpiComponent},
+  { path: 'evaluate',component:EvaluateKpiComponent}
 ];
 
 @NgModule({
-  declarations: [AssignKpiComponent, TemplateKpiComponent, AssigementKpiComponent],
+  declarations: [AssignKpiComponent, TemplateKpiComponent, AssigementKpiComponent, EvaluateKpiComponent],
   imports: [
     CommonModule,
     FormsModule,

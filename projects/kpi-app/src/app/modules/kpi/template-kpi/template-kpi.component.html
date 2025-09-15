@@ -39,6 +39,7 @@
         <tr>
           <th class="id-col">ID</th>
           <th>Chỉ tiêu đánh giá</th>
+          <th>Mục tiêu</th>
           <th>Trọng số</th>
           <th>Công thức tính</th>
           <th>Hạn chót</th>
@@ -49,7 +50,7 @@
       <tbody *ngFor="let group of groupedData">
         <!-- Header nhóm -->
         <tr class="group-header">
-          <td colspan="6">
+          <td colspan="7">
             <strong>{{ group.type }}</strong>
           </td>
         </tr>
@@ -58,7 +59,8 @@
         <tr *ngFor="let item of group.items">
           <td class="id-col">{{ item.id }}</td>
           <td>{{ item.kpiName }}</td>
-          <td>{{ item.weight }}</td>
+          <td>{{item.targetValue}}%</td>
+          <td>{{ item.weight }}%</td>
           <td>{{ item.calculationFormula }}</td>
           <td>{{ item.deadLine | date : "dd/MM/yyyy" }}</td>
           <td>

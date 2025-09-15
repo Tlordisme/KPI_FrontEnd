@@ -21,22 +21,26 @@ export class AssigementKpiComponent implements OnInit {
   sidebarOpen: boolean = false;
   units: any[] = [];
   users: any[] = [];
-  filteredUnits: any[] = [];
+  filteredUsers: any[] = [];
   templates: any[] = [];
   selectedTemplateId: number | null = null;
   itemsByTemplate: any[] = [];
   selectedItems: number[] = [];
-
+  dropdownOpen = false;
   // Assignment data
-  selectedUserId: number = 0;
+  selectedUserId: number[] = [];
   selectedUnitId: number = 0;
   contributionWeight: number | null = null;
   selectedYear: number = new Date().getFullYear();
 
-  constructor(
-    private kpiService: KpiService,
-    private authService: AuthService
-  ) {}
+constructor(
+  private kpiService: KpiService,
+  private authService: AuthService
+) {
+  document.addEventListener('click', () => {
+    this.dropdownOpen = false;
+  });
+}
 
   ngOnInit(): void {
     this.loadUnitsAndUsers();
@@ -54,23 +58,15 @@ export class AssigementKpiComponent implements OnInit {
     return user ? user.unitName : 'Chưa có đơn vị';
   }
 
-  onUserChange() {
-    const selectedUser = this.users.find(
-      (u: any) => u.id === this.selectedUserId
-    );
-    if (selectedUser) {
-      this.filteredUnits = this.units.filter(
-        (unit: any) => unit.id === selectedUser.unitId
+  onUnitChange() {
+    if (this.selectedUnitId) {
+      this.filteredUsers = this.users.filter(
+        (u: any) => u.unitId === this.selectedUnitId
       );
-      if (this.filteredUnits.length > 0) {
-        this.selectedUnitId = this.filteredUnits[0].id;
-      } else {
-        this.selectedUnitId = 0;
-      }
     } else {
-      this.filteredUnits = [];
-      this.selectedUnitId = 0;
+      this.filteredUsers = [];
     }
+    this.selectedUserId = [];
   }
 
   // Load data from API
@@ -116,6 +112,14 @@ export class AssigementKpiComponent implements OnInit {
       this.itemsByTemplate = [];
     }
   }
+  onUserSelectionChange(userId: number, event: any) {
+  if (event.target.checked) {
+    this.selectedUserId.push(userId);
+  } else {
+    this.selectedUserId = this.selectedUserId.filter(id => id !== userId);
+  }
+}
+
 
   onItemSelectionChange(itemId: number, event: any) {
     const isChecked = event.target.checked;
@@ -133,13 +137,13 @@ export class AssigementKpiComponent implements OnInit {
   // Hàm giao KPI duy nhất, sử dụng AssignItemDto cho mỗi item được chọn
   assignKpis() {
     if (
-      !this.selectedUserId ||
+      this.selectedUserId.length === 0 ||
       !this.selectedUnitId ||
       !this.selectedYear ||
       this.selectedTemplateId === null
     ) {
       alert(
-        'Vui lòng điền đầy đủ thông tin: Người nhận, Đơn vị, Năm và chọn Template.'
+        'Vui lòng điền đầy đủ thông tin: Người nhận, Đơn vị, Năm và Template.'
       );
       return;
     }
@@ -151,43 +155,54 @@ export class AssigementKpiComponent implements OnInit {
 
     let successCount = 0;
     let errorCount = 0;
-    const totalItems = this.selectedItems.length;
+    const total = this.selectedUserId.length * this.selectedItems.length;
 
-    this.selectedItems.forEach((itemId) => {
-      const dto: AssignItemDto = {
-        userId: this.selectedUserId,
-        unitId: this.selectedUnitId,
-        kpiItemId: itemId,
-        year: this.selectedYear,
-        contributionWeight: this.contributionWeight ?? undefined,
-      };
+    this.selectedUserId.forEach((userId) => {
+      this.selectedItems.forEach((itemId) => {
+        const dto: AssignItemDto = {
+          userId: userId,
+          unitId: this.selectedUnitId,
+          kpiItemId: itemId,
+          year: this.selectedYear,
+          contributionWeight: this.contributionWeight ?? 100,
+        };
 
-      this.kpiService.assignItem(dto).subscribe({
-        next: () => {
-          successCount++;
-          if (successCount + errorCount === totalItems) {
-            alert(
-              `Giao thành công ${successCount} KPI Items. Có ${errorCount} lỗi.`
+        this.kpiService.assignItem(dto).subscribe({
+          next: () => {
+            successCount++;
+            if (successCount + errorCount === total) {
+              alert(`Giao thành công ${successCount}, lỗi ${errorCount}`);
+              this.resetForm();
+            }
+          },
+          error: (err) => {
+            errorCount++;
+            console.error(
+              `Lỗi khi giao KPI cho user ${userId}, item ${itemId}:`,
+              err
             );
-            this.resetForm();
-          }
-        },
-        error: (err) => {
-          errorCount++;
-          console.error(`Lỗi khi giao KPI Item ${itemId}:`, err);
-          if (successCount + errorCount === totalItems) {
-            alert(
-              `Giao thành công ${successCount} KPI Items. Có ${errorCount} lỗi.`
-            );
-            this.resetForm();
-          }
-        },
+            if (successCount + errorCount === total) {
+              alert(`Giao thành công ${successCount}, lỗi ${errorCount}`);
+              this.resetForm();
+            }
+          },
+        });
       });
     });
   }
+get selectedUserNames() {
+  return this.filteredUsers
+    .filter(u => this.selectedUserId.includes(u.id))
+    .map(u => u.fullName);
+}
+  toggleDropdown(event: Event) {
+    this.dropdownOpen = !this.dropdownOpen;
+    event.stopPropagation();
+  }
+
 
   resetForm() {
-    this.selectedUserId = 0;
+    this.selectedUserId = [];
     this.selectedUnitId = 0;
     this.selectedTemplateId = null;
     this.itemsByTemplate = [];

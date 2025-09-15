@@ -10,6 +10,7 @@ export  interface KpiItem {
   calculationFormula: string;
   kpiTemplateId: number;
   deadLine: string;
+  targetValue: number;
   
 }
 export  interface KpiTemplate {
@@ -44,6 +45,7 @@ export class TemplateKpiComponent implements OnInit {
     this.kpiService.getTemplates().subscribe({
       next: (res: KpiTemplate[]) => {
         this.templates = res;
+        
       },
       error: (err) => console.error('Lỗi load templates:', err),
     });
@@ -56,6 +58,7 @@ export class TemplateKpiComponent implements OnInit {
         this.filteredData = [];
         this.groupedData = []; 
       },
+      
       error: (err) => console.error('Lỗi load items:', err),
     });
   }
@@ -112,6 +115,7 @@ kpiFields: EditField[] = [
       { value: 'Tuân thủ', label: 'Tuân thủ' },
   ] },
   { key: 'weight', label: 'Trọng số', type: 'number' },
+  { key: 'targetValue', label: 'Mục tiêu', type: 'number' },
   { key: 'deadLine', label: 'Ngày hết hạn', type: 'date' },
   { key: 'kpiTemplateId', label: 'Template', type: 'number', readonly: true },
   { key: 'calculationFormula', label: 'Công thức KPI', type: 'text' },

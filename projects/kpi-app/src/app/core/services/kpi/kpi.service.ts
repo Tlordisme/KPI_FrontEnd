@@ -96,6 +96,16 @@ export class KpiService {
       headers: this.getAuthHeaders(),
     });
   }
+  getUserAssignments(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.url}/Assignment/user/${userId}`,{
+      headers: this.getAuthHeaders()
+    });
+  }
+    selfEvaluate(dto: { assignmentId: number, actualResults: number }): Observable<any> {
+    return this.http.post<any>(`${this.url}/Assignment/self-evaluate`, dto, {
+      headers: this.getAuthHeaders(),
+    });
+  }
 
   // assignTemplate(dto: AssignTemplateDto): Observable<any> {
   //   return this.http.post(`${this.apiUrl}/assign-template`, dto, {
