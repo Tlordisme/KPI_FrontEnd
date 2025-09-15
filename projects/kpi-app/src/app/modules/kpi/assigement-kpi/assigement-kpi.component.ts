@@ -167,28 +167,37 @@ constructor(
           contributionWeight: this.contributionWeight ?? 100,
         };
 
-      this.kpiService.assignItem(dto).subscribe({
-        next: () => {
-          successCount++;
-          if (successCount + errorCount === totalItems) {
-            alert(
-              `Giao thành công ${successCount} KPI Items. Có ${errorCount} lỗi.`
+        this.kpiService.assignItem(dto).subscribe({
+          next: () => {
+            successCount++;
+            if (successCount + errorCount === total) {
+              alert(`Giao thành công ${successCount}, lỗi ${errorCount}`);
+              this.resetForm();
+            }
+          },
+          error: (err) => {
+            errorCount++;
+            console.error(
+              `Lỗi khi giao KPI cho user ${userId}, item ${itemId}:`,
+              err
             );
-            this.resetForm();
-          }
-        },
-        error: (err) => {
-          errorCount++;
-          console.error(`Lỗi khi giao KPI Item ${itemId}:`, err);
-          if (successCount + errorCount === totalItems) {
-            alert(
-              `Giao thành công ${successCount} KPI Items. Có ${errorCount} lỗi.`
-            );
-            this.resetForm();
-          }
-        },
+            if (successCount + errorCount === total) {
+              alert(`Giao thành công ${successCount}, lỗi ${errorCount}`);
+              this.resetForm();
+            }
+          },
+        });
       });
     });
+  }
+get selectedUserNames() {
+  return this.filteredUsers
+    .filter(u => this.selectedUserId.includes(u.id))
+    .map(u => u.fullName);
+}
+  toggleDropdown(event: Event) {
+    this.dropdownOpen = !this.dropdownOpen;
+    event.stopPropagation();
   }
 
 
