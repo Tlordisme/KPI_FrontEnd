@@ -1,0 +1,270 @@
+<div class="page-container">
+  <app-topbar></app-topbar>
+  <app-sidebar
+    [sidebarOpen]="sidebarOpen"
+    (toggleSidebarEvent)="toggleSidebar()"
+  ></app-sidebar>
+
+  <div class="form-card">
+    <div class="form-header">
+      <h2>Phê Duyệt KPI</h2>
+    </div>
+
+    <div class="filter-section">
+      <label for="yearSelect">Chọn Năm:</label>
+      <select
+        id="yearSelect"
+        [(ngModel)]="selectedYear"
+        (change)="loadAssignments()"
+      >
+        <option *ngFor="let year of availableYears" [value]="year">
+          {{ year }}
+        </option>
+      </select>
+    </div>
+
+    <section class="review-section">
+      <h3>KPI của các Đơn vị</h3>
+      <div class="unit-kpi-container">
+        <div
+          class="unit-kpi-bar"
+          *ngFor="let assignment of filteredUnitAssignments"
+        >
+          <div
+            class="bar-header"
+            (click)="toggleUnitExpansion(assignment.unitId)"
+          >
+            <div class="header-info">
+              <h4>
+                {{ assignment.unitName }} ({{ assignment.headOfUnitName }})
+              </h4>
+              <span
+                class="status-badge"
+                [ngClass]="getBadgeClass(assignment.status)"
+              >
+                {{ getStatusName(assignment.status) }}
+              </span>
+            </div>
+            <div class="header-actions">
+              <button
+                class="approve-btn"
+                (click)="
+                  $event.stopPropagation();
+                  approveAssignment(assignment, 'Unit')
+                "
+                [disabled]="assignment.status !== 'Evaluated'"
+              >
+                <mat-icon>check</mat-icon> Phê duyệt
+              </button>
+              <button
+                class="reject-btn"
+                (click)="
+                  $event.stopPropagation();
+                  showRejectAssignmentDialog(assignment, 'Unit')
+                "
+                [disabled]="assignment.status !== 'Evaluated'"
+              >
+                <mat-icon>close</mat-icon> Từ chối
+              </button>
+              <mat-icon
+                class="expand-icon"
+                [ngClass]="{ expanded: isUnitExpanded(assignment.unitId) }"
+              >
+                {{
+                  isUnitExpanded(assignment.unitId)
+                    ? "expand_less"
+                    : "expand_more"
+                }}
+              </mat-icon>
+            </div>
+          </div>
+          <div
+            class="kpi-table-container"
+            *ngIf="isUnitExpanded(assignment.unitId)"
+          >
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="id-col">STT</th>
+                  <th>Chỉ tiêu đánh giá</th>
+                  <th>Mục tiêu</th>
+                  <th>Trọng số</th>
+                  <th>Công thức tính</th>
+                  <th>Kết quả thực tế</th>
+                  <th>Điểm KPI</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let group of assignment.groupedKpiItems">
+                  <tr class="group-header">
+                    <td [attr.colspan]="5">
+                      <strong>{{ group.type }}</strong>
+                    </td>
+                  </tr>
+                  <tr *ngFor="let item of group.items; let i = index">
+                    <td class="id-col">{{ i + 1 }}</td>
+                    <td>{{ item.kpiName }}</td>
+                    <td>{{ item.targetValue }}</td>
+                    <td>{{ item.weight }}%</td>
+                    <td>{{ item.calculationFormula }}</td>
+                    <td>{{ item.actualResults }}</td>
+                    <td>{{ item.componentScore }}</td>
+                  </tr>
+                </ng-container>
+                <tr *ngIf="assignment.groupedKpiItems.length === 0">
+                  <td [attr.colspan]="5" class="no-kpi-message">
+                    Chưa có chỉ tiêu KPI nào cho đơn vị này.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <p *ngIf="filteredUnitAssignments.length === 0" class="no-data-message">
+        Không có KPI nào cho các đơn vị.
+      </p>
+    </section>
+
+    <section class="review-section">
+      <h3>KPI của các thành viên trong Đơn vị của tôi</h3>
+      <!-- <div class="filter-dropdown">
+        <label>Chọn Thành viên:</label>
+        <select
+          [(ngModel)]="selectedMemberForReviewId"
+          (change)="filterMemberAssignments()"
+        >
+          <option [value]="0">-- Tất cả --</option>
+
+          <option
+            *ngFor="let member of memberDropdownOptions"
+            [value]="member.userId"
+          >
+            {{ member.userName }}
+          </option>
+        </select>
+      </div> -->
+
+      <div class="unit-kpi-container">
+        <div
+          class="unit-kpi-bar"
+          *ngFor="let assignment of filteredMemberAssignments"
+        >
+          <div
+            class="bar-header"
+            (click)="toggleMemberExpansion(assignment.userId)"
+          >
+            <div class="header-info">
+              <h4>{{ assignment.userName }}</h4>
+              <span
+                class="status-badge"
+                [ngClass]="getBadgeClass(assignment.status)"
+              >
+                {{ getStatusName(assignment.status) }}
+              </span>
+            </div>
+            <div class="header-actions">
+              <button
+                class="approve-btn"
+                (click)="
+                  $event.stopPropagation();
+                  approveAssignment(assignment, 'Member')
+                "
+                [disabled]="assignment.status !== 'Evaluated'"
+              >
+                <mat-icon>check</mat-icon> Phê duyệt
+              </button>
+              <button
+                class="reject-btn"
+                (click)="
+                  $event.stopPropagation();
+                  showRejectAssignmentDialog(assignment, 'Member')
+                "
+                [disabled]="assignment.status !== 'Evaluated'"
+              >
+                <mat-icon>close</mat-icon> Từ chối
+              </button>
+              <mat-icon
+                class="expand-icon"
+                [ngClass]="{ expanded: isMemberExpanded(assignment.userId) }"
+              >
+                {{
+                  isMemberExpanded(assignment.userId)
+                    ? "expand_less"
+                    : "expand_more"
+                }}
+              </mat-icon>
+            </div>
+          </div>
+          <div
+            class="kpi-table-container"
+            *ngIf="isMemberExpanded(assignment.userId)"
+          >
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="id-col">STT</th>
+                  <th>Chỉ tiêu đánh giá</th>
+                  <th>Trọng số</th>
+                  <th>Công thức tính</th>
+                  <th>Hạn chót</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let group of assignment.groupedKpiItems">
+                  <tr class="group-header">
+                    <td [attr.colspan]="5">
+                      <strong>{{ group.type }}</strong>
+                    </td>
+                  </tr>
+                  <tr *ngFor="let item of group.items; let i = index">
+                    <td class="id-col">{{ i + 1 }}</td>
+                    <td>{{ item.kpiName }}</td>
+                    <td>{{ item.weight }}%</td>
+                    <td>{{ item.calculationFormula }}</td>
+                    <td>{{ item.deadLine | date : "dd/MM/yyyy" }}</td>
+                  </tr>
+                </ng-container>
+                <tr *ngIf="assignment.groupedKpiItems.length === 0">
+                  <td [attr.colspan]="5" class="no-kpi-message">
+                    Chưa có chỉ tiêu KPI nào cho thành viên này.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <p *ngIf="filteredMemberAssignments.length === 0" class="no-data-message">
+        Không có KPI nào cho các thành viên.
+      </p>
+    </section>
+  </div>
+
+  <div
+    class="reject-dialog-overlay"
+    *ngIf="showRejectDialog"
+    (click)="hideRejectDialog()"
+  >
+    <div class="reject-dialog-content" (click)="$event.stopPropagation()">
+      <h3>Từ chối Assignment</h3>
+      <p>Bạn có chắc muốn từ chối Assignment này không?</p>
+      <textarea
+        [(ngModel)]="rejectReason"
+        placeholder="Nhập lý do từ chối (bắt buộc)..."
+        rows="4"
+        required
+      ></textarea>
+      <div class="dialog-actions">
+        <button class="cancel-btn" (click)="hideRejectDialog()">Hủy</button>
+        <button
+          class="confirm-reject-btn"
+          (click)="confirmRejectAssignment()"
+          [disabled]="!rejectReason.trim()"
+        >
+          Xác nhận từ chối
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
