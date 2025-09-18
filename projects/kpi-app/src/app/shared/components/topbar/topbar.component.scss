@@ -1,28 +1,61 @@
-
 /* Header */
 .header {
-  display: flex; align-items: center; justify-content: space-between;
-  background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
-  padding: 12px 16px; margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(155deg, #F3ECFA 0%, #ffffff 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
 
   .brand {
-    display: flex; gap: 12px; align-items: center;
-    .logo { width: 44px; height: 44px; object-fit: contain; }
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    .logo {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
     .brand-text {
-      .brand-name { font-weight: 800; letter-spacing: .4px; }
-      .brand-sub { color: #64748b; font-size: 12px; }
+      .brand-name {
+        font-weight: 800;
+        letter-spacing: 0.4px;
+      }
+      .brand-sub {
+        color: #64748b;
+        font-size: 12px;
+      }
     }
   }
   .header-right {
-    display: flex; align-items: center; gap: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     .bell {
-      border: 1px solid #cbd5e1; background: #fff; border-radius: 10px;
-      padding: 6px 10px; cursor: pointer;
-      &:hover { background: #f8fafc; }
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      border-radius: 10px;
+      padding: 6px 10px;
+      cursor: pointer;
+      &:hover {
+        background: #f8fafc;
+      }
     }
-    .user { display: flex; align-items: center; gap: 10px; }
-    .user-name { font-weight: 600; }
-    .avatar { width: 36px; height: 36px; border-radius: 999px; background: #e2e8f0; }
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .user-name {
+      font-weight: 600;
+    }
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: #e2e8f0;
+    }
   }
 }
-

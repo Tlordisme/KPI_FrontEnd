@@ -1,0 +1,121 @@
+@use "../../../../styles.scss" as *;
+
+.page-container {
+  width: 1440px;
+  min-height: 1024px;
+  margin: 0 auto;
+  padding: 16px;
+  background: #f8fafc;
+  color: #0f172a;
+  box-sizing: border-box;
+}
+
+.form-card {
+  background-color: $card-bg;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+  .form-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+
+    h2 {
+      font-size: 28px;
+      font-weight: 500;
+      margin: 0;
+    }
+  }
+
+  /* Bảng vi phạm */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+
+    th,
+    td {
+      border: 2px solid #ccc;
+      padding: 12px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: #f3f4f6;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: right;
+    gap: 16px;
+    margin-bottom: 20px;
+
+    button {
+      background-color: #d92b04;
+      color: #fff;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #ff4938;
+      }
+
+      &.create {
+        background-color: #2196f3;
+
+        &:hover {
+          background-color: #1e88e5;
+        }
+      }
+      &.level {
+        background-color: #b08ff7;
+
+        &:hover {
+          background-color: #b46bf8;
+        }
+      }
+    }
+  }
+  .totalDeduction {
+    font-weight: bold;
+    color: #d92b04;
+  }
+  /* No data container */
+  .no-data-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    color: #888;
+
+    .no-data-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    p {
+      font-size: 18px;
+    }
+  }
+}
+.form-button {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  margin-top: 40px;
+}

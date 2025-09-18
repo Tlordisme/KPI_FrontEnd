@@ -1,0 +1,114 @@
+@use '../../../../styles.scss' as *;
+/* Cấu trúc chung */
+.page-container {
+  width: 1440px;
+  min-height: 1024px;
+  margin: 0 auto;
+  padding: 16px;
+  background: #f8fafc;
+  color: #0f172a;
+  box-sizing: border-box;
+}
+.form-card {
+  background-color: $card-bg ;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  .form-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    h2 {
+      font-size: 28px;
+      font-weight: 500;
+      margin: 0;
+    }
+  }
+
+table {
+  width: 100%;
+  border-collapse: collapse; 
+  table-layout: fixed; 
+  margin-bottom: 20px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+  word-wrap: break-word; 
+}
+/* Input trong bảng */
+.table input[type="number"] {
+  width: 80px;
+  padding: 5px 8px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  text-align: center;
+}
+.action-col {
+  width: 100px;        
+  text-align: center;
+}
+.id-col{
+    
+    width: 50px;
+    text-align: center;
+}
+td.id-col {
+  text-align: center;
+}
+td.action-col {
+  text-align: center;
+}
+
+.group-header td {
+  text-align: center;     
+  vertical-align: middle;   
+  background-color: #f1f5f9;
+  font-weight: bold;
+}
+
+}
+
+/* Button */
+button {
+  display: block;
+  margin: 0 auto; 
+  padding: 10px 10px;
+  background:$primary-color ;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background:#1e40af ;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+.no-data-container {
+  text-align: center;
+  margin: 40px 0;
+}
+
+.no-data-icon {
+  font-size: 80px;      
+  color: #ccc;         
+  display: block;
+  margin-bottom: 20px;
+}
+
+.no-data-container p {
+  font-size: 16px;
+  color: #666;
+}
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin: 4px 0 0 0;
+}

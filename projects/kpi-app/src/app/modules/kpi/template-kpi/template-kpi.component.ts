@@ -10,6 +10,7 @@ export interface KpiItem {
   calculationFormula: string;
   kpiTemplateId: number;
   deadLine: string;
+  targetValue: number;
 }
 export interface KpiTemplate {
   id: number;
@@ -43,6 +44,7 @@ export class TemplateKpiComponent implements OnInit {
     this.kpiService.getTemplates().subscribe({
       next: (res: KpiTemplate[]) => {
         this.templates = res;
+        
       },
       error: (err) => console.error('Lỗi load templates:', err),
     });
@@ -55,6 +57,7 @@ export class TemplateKpiComponent implements OnInit {
         this.filteredData = [];
         this.groupedData = [];
       },
+      
       error: (err) => console.error('Lỗi load items:', err),
     });
   }

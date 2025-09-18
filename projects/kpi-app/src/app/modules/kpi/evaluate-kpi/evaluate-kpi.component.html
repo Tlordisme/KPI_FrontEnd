@@ -1,0 +1,54 @@
+<div class="page-container">
+  <app-topbar></app-topbar>
+  <app-sidebar
+    [sidebarOpen]="sidebarOpen"
+    (toggleSidebarEvent)="toggleSidebar()"
+  ></app-sidebar>
+
+  <div class="form-card">
+    <div class="form-header">
+      <h2>Đánh giá cá nhân</h2>
+    </div>
+
+    <div *ngIf="assignments.length > 0; else noData">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Chỉ tiêu đánh giá</th>
+            <th>Phần trăm đóng góp(%)</th>
+            <th>Loại Kpi</th>
+            <th>Kết quả thực tế(%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of assignments">
+            <td>{{ item.kpiName }}</td>
+            <td>{{ item.contributionWeight }}%</td>
+            <td>{{ item.kpiType }}</td>
+            <td>
+              <input
+                type="number"
+                [(ngModel)]="item.actualResultsInput"
+                min="0"
+                max="100"
+                (input)="validateInput(item)"
+              />
+              <p class="error-message" *ngIf="item.error">
+                Giá trị phải từ 0 đến 100!
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button (click)="saveAll()">Gửi đánh giá</button>
+    </div>
+
+    <ng-template #noData>
+      <div class="no-data-container">
+        <span class="material-icons no-data-icon"> assignment_late </span>
+        <p>Hiện chưa có KPI nào cần đánh giá.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

@@ -6,6 +6,7 @@ export interface EditField {
   type: 'text' | 'number' | 'date' | 'textarea' | 'select'; // kiểu input
   readonly?: boolean;    // có cho sửa không
   options?: { value: any; label: string }[]; 
+  onChange?: (value: any) => void;
 }
 
 @Component({
