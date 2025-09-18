@@ -97,7 +97,7 @@
               <tbody>
                 <ng-container *ngFor="let group of assignment.groupedKpiItems">
                   <tr class="group-header">
-                    <td [attr.colspan]="5">
+                    <td [attr.colspan]="7">
                       <strong>{{ group.type }}</strong>
                     </td>
                   </tr>
@@ -205,24 +205,28 @@
                 <tr>
                   <th class="id-col">STT</th>
                   <th>Chỉ tiêu đánh giá</th>
+                  <th>Mục tiêu</th>
                   <th>Trọng số</th>
                   <th>Công thức tính</th>
-                  <th>Hạn chót</th>
+                  <th>Kết quả thực tế</th>
+                  <th>Điểm KPI</th>
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let group of assignment.groupedKpiItems">
                   <tr class="group-header">
-                    <td [attr.colspan]="5">
+                    <td [attr.colspan]="7">
                       <strong>{{ group.type }}</strong>
                     </td>
                   </tr>
                   <tr *ngFor="let item of group.items; let i = index">
                     <td class="id-col">{{ i + 1 }}</td>
                     <td>{{ item.kpiName }}</td>
+                    <td>{{ item.targetValue }}</td>
                     <td>{{ item.weight }}%</td>
                     <td>{{ item.calculationFormula }}</td>
-                    <td>{{ item.deadLine | date : "dd/MM/yyyy" }}</td>
+                    <td>{{ item.actualResults }}</td>
+                    <td>{{ item.componentScore }}</td>
                   </tr>
                 </ng-container>
                 <tr *ngIf="assignment.groupedKpiItems.length === 0">
