@@ -12,6 +12,7 @@ import { ApproveKpiAssignmentBulkDto } from '../../../modules/kpi/review-kpi/rev
 export class KpiService {
   private apiUrl = 'http://localhost:5118/api/Kpi'; // port KPI service
   private url = 'http://localhost:5118/api';
+  private urlVio = 'http://localhost:5118/api/Violation';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -96,6 +97,11 @@ export class KpiService {
       headers: this.getAuthHeaders(),
     });
   }
+  getUnitById(unitId: number): Observable<any> {
+  return this.http.get<any>(`${this.url}/Unit/units/${unitId}`, {
+    headers: this.getAuthHeaders(),
+  });
+}
 
   assignItem(dto: AssignItemDto): Observable<any> {
     return this.http.post(`${this.url}/Assignment/assign-item`, dto, {
@@ -107,7 +113,7 @@ export class KpiService {
       headers: this.getAuthHeaders()
     });
   }
-    selfEvaluate(dto: { assignmentId: number, actualResults: number }): Observable<any> {
+  selfEvaluate(dto: { assignmentId: number, actualResults: number }): Observable<any> {
     return this.http.post<any>(`${this.url}/Assignment/self-evaluate`, dto, {
       headers: this.getAuthHeaders(),
     });
@@ -160,4 +166,32 @@ export class KpiService {
       headers: this.getAuthHeaders(),
     });
   }
+
+  //violation
+  getAllUserViolations(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlVio}/getAllUserViolations`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+  getCategoryWithLevels(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlVio}/getCategoryWithLevels`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+  createViolation(violation: any): Observable<any> {
+    return this.http.post<any>(`${this.urlVio}/createViolation`, violation, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+  createCategory(category: any): Observable<any> {
+    return this.http.post<any>(`${this.urlVio}/createCategory`, category, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+  createCategoryLevel(level: any): Observable<any> {
+    return this.http.post<any>(`${this.urlVio}/violationLevel`, level, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
 }

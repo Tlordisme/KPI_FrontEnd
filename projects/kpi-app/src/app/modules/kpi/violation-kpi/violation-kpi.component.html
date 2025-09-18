@@ -1,0 +1,142 @@
+<div class="page-container">
+  <app-topbar></app-topbar>
+  <app-sidebar
+    [sidebarOpen]="sidebarOpen"
+    (toggleSidebarEvent)="toggleSidebar()"
+  ></app-sidebar>
+
+  <div class="form-card">
+    <div class="form-header">
+      <h2>Vi phạm</h2>
+    </div>
+    <div class="form-button">
+      <h2>Các cá nhân vi phạm</h2>
+      <div class="action-buttons">
+        <button (click)="onCreate()">Ghi vi phạm</button>
+        <button class="create" (click)="onCreateCategory()">Tạo vi phạm</button>
+        <button class="level" (click)="onCreateLevel()">Tạo mức độ</button>
+      </div>
+    </div>
+
+    <div *ngIf="violations.length > 0; else noData">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Người vi phạm</th>
+            <th>Đơn vị</th>
+            <th>Loại vi phạm</th>
+            <th>Số lần vi phạm</th>
+            <th>Điểm trừ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let v of violations">
+            <tr *ngFor="let detail of v.details; let i = index">
+              <td *ngIf="i === 0" [attr.rowspan]="v.details.length">
+                {{ v.userName }}
+              </td>
+              <td *ngIf="i === 0" [attr.rowspan]="v.details.length">
+                {{ v.unitName }}
+              </td>
+              <td>{{ detail.categoryName }}</td>
+              <td>{{ detail.totalCount }}</td>
+              <td>{{ detail.totalComponent }}</td>
+            </tr>
+            <!-- Row tổng điểm -->
+            <tr>
+              <td colspan="3" class="text-right"><b>Tổng điểm trừ:</b></td>
+              <td colspan="2" class="totalDeduction">{{ v.totalDeduction }}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <h2>Bảng vi phạm cá nhân</h2>
+    <!-- Chỉ render khi personalKpis đã load -->
+    <table class="table" *ngIf="personalKpis.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Tên KPI</th>
+          <!-- Lặp đủ cột dựa trên maxLevelCount -->
+          <th *ngFor="let i of [].constructor(maxLevelCount); let idx = index">
+            {{ personalKpis[0]?.levels?.[idx]?.maxDeduction ?? 'x' }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let kpi of personalKpis">
+          <tr>
+            <td>{{ kpi.id }}</td>
+            <td>{{ kpi.name }}</td>
+            <!-- Lặp đủ cột, điền 'x' nếu level chưa có dữ liệu -->
+            <td
+              *ngFor="let i of [].constructor(maxLevelCount); let idx = index"
+            >
+              {{ kpi.levels?.[idx]?.description ?? 'x' }}
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+
+    <!-- Nếu chưa có dữ liệu thì thông báo -->
+    <div *ngIf="!personalKpis || personalKpis.length === 0">
+      Chưa có KPI nào.
+    </div>
+
+    <h2>Bảng vi phạm đơn vị</h2>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Tên KPI</th>
+          <th>Mục tiêu</th>
+          <th>Công thức tính</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let kpi of unitKpis">
+          <td>{{ kpi.id }}</td>
+          <td>{{ kpi.name }}</td>
+          <td><={{ kpi.targetValue }}</td>
+
+          <td>{{ kpi.calculationFormula }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noData>
+      <div class="no-data-container">
+        <span class="material-icons no-data-icon">assignment_late</span>
+        <p>Hiện chưa có vi phạm nào.</p>
+      </div>
+    </ng-template>
+  </div>
+  <app-form-edit
+    [item]="createViolation"
+    [fields]="violationFields"
+    title="Ghi vi phạm"
+    (submitEvent)="submit($event)"
+    (cancelEvent)="cancel()"
+  >
+  </app-form-edit>
+  <app-form-edit
+    [item]="createCategory"
+    [fields]="categoryFields"
+    title="Tạo thêm dữ liệu vi phạm"
+    (submitEvent)="submitCategory($event)"
+    (cancelEvent)="cancelCategory()"
+  >
+  </app-form-edit>
+  <!-- Form tạo level -->
+  <app-form-edit
+    [item]="createLevel"
+    [fields]="levelFields"
+    title="Tạo mức độ tuân thủ"
+    (submitEvent)="submitLevel($event)"
+    (cancelEvent)="cancelLevel()"
+  >
+  </app-form-edit>
+</div>

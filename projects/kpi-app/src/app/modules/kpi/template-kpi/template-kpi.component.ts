@@ -10,6 +10,7 @@ export interface KpiItem {
   calculationFormula: string;
   kpiTemplateId: number;
   deadLine: string;
+  targetValue: number;
 }
 export interface KpiTemplate {
   id: number;

@@ -76,9 +76,14 @@
           Đánh giá cá nhân
         </button>
 
-        <button class="nav-item sub-item">
-          <mat-icon>insights</mat-icon>
-          Xem báo cáo
+         <button
+          class="nav-item sub-item"
+          routerLink="/kpi/violation"
+          routerLinkActive="active"
+          (click)="closeSidebar()"
+        >
+          <mat-icon>error_outline</mat-icon>
+          Vi phạm
         </button>
 
         <button class="nav-item sub-item">

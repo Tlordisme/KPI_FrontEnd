@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { KpiService } from '../../../core/services/kpi/kpi.service';
-import { AuthService, LoginResponse } from '../../../core/services/auth/auth.service';
+import {
+  AuthService,
+  LoginResponse,
+} from '../../../core/services/auth/auth.service';
 
 export interface SelfEvaluateDto {
   assignmentId: number;
@@ -40,8 +43,13 @@ export class EvaluateKpiComponent implements OnInit {
     this.kpiService.getUserAssignments(userId).subscribe({
       next: (res: any[]) => {
         this.assignments = res
-          .filter(a => a.status === 'Pending' || a.status === 'PendingApproval')
-          .map(a => ({ ...a, actualResultsInput: a.actualResults }));
+          .filter(
+            (a) =>
+              a.status === 'Pending' ||
+              a.status === 'PendingApproval' ||
+              a.status === 'Assigned'
+          )
+          .map((a) => ({ ...a, actualResultsInput: a.actualResults }));
       },
       error: (err) => {
         console.error('Lỗi khi lấy assignments:', err);
@@ -51,21 +59,20 @@ export class EvaluateKpiComponent implements OnInit {
 
   saveAll() {
     // Chuẩn bị danh sách DTO
-    const dtos: SelfEvaluateDto[] = this.assignments.map(a => ({
+    const dtos: SelfEvaluateDto[] = this.assignments.map((a) => ({
       assignmentId: a.id,
-      actualResults: a.actualResultsInput
+      actualResults: a.actualResultsInput,
     }));
 
-    // Gọi API lần lượt (có thể dùng forkJoin để gọi đồng thời)
     let successCount = 0;
     let errorCount = 0;
 
-    dtos.forEach(dto => {
+    dtos.forEach((dto) => {
       this.kpiService.selfEvaluate(dto).subscribe({
         next: (res) => {
           successCount++;
           // Cập nhật trong bảng
-          const item = this.assignments.find(a => a.id === dto.assignmentId);
+          const item = this.assignments.find((a) => a.id === dto.assignmentId);
           if (item) {
             item.componentScore = res.componentScore;
             item.status = res.status;
@@ -73,15 +80,35 @@ export class EvaluateKpiComponent implements OnInit {
 
           if (successCount + errorCount === dtos.length) {
             alert(`Đã lưu thành công ${successCount} KPI, lỗi ${errorCount}`);
+            this.resetAssignments();
           }
         },
         error: (err) => {
           errorCount++;
           if (successCount + errorCount === dtos.length) {
             alert(`Đã lưu thành công ${successCount} KPI, lỗi ${errorCount}`);
+            this.resetAssignments();
           }
-        }
+        },
       });
     });
+  }
+  resetAssignments() {
+    this.assignments = [];
+    if (this.userId) {
+      this.loadAssignments(this.userId);
+    }
+  }
+
+  validateInput(item: any) {
+    if (item.actualResultsInput == null || item.actualResultsInput < 0) {
+      item.actualResultsInput = 0;
+      item.error = true;
+    } else if (item.actualResultsInput > 100) {
+      item.actualResultsInput = 100;
+      item.error = true;
+    } else {
+      item.error = false;
+    }
   }
 }

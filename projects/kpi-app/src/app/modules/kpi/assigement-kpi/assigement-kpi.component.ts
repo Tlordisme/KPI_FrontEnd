@@ -9,6 +9,9 @@ export interface AssignItemDto {
   kpiItemId: number;
   contributionWeight?: number;
   year: number;
+  kpiName: string;
+  kpiType: string;
+  deadLine: Date;
 }
 
 @Component({
@@ -33,18 +36,19 @@ export class AssigementKpiComponent implements OnInit {
   contributionWeight: number | null = null;
   selectedYear: number = new Date().getFullYear();
 
-constructor(
-  private kpiService: KpiService,
-  private authService: AuthService
-) {
-  document.addEventListener('click', () => {
-    this.dropdownOpen = false;
-  });
-}
+  constructor(
+    private kpiService: KpiService,
+    private authService: AuthService
+  ) {
+    document.addEventListener('click', () => {
+      this.dropdownOpen = false;
+    });
+  }
 
   ngOnInit(): void {
     this.loadUnitsAndUsers();
     this.loadTemplates();
+    
   }
 
   // UI logic
@@ -71,14 +75,27 @@ constructor(
 
   // Load data from API
   loadUnitsAndUsers() {
+    const currentUser = this.authService.getUser(); 
+    const currentUserId = currentUser?.userID; 
     this.kpiService.getUnits().subscribe({
       next: (units) => {
         this.units = units;
         this.authService.getUsers().subscribe((users) => {
-          this.users = users.map((u: any) => {
-            const unit = this.units.find((x: any) => x.id === u.unitId);
-            return { ...u, unitName: unit ? unit.name : 'Chưa có đơn vị' };
-          });
+          this.users = users
+            .filter((u: any) => u.userID !== currentUserId)
+            .map((u: any) => {
+              const unit = this.units.find((x: any) => x.id === u.unitId);
+              const isHead = unit && unit.headOfUnitId === u.id; // check trưởng khoa
+              let fullName = u.fullName;
+              if (isHead) {
+                fullName += ' (Trưởng khoa)';
+              }
+              return {
+                ...u,
+                unitName: unit ? unit.name : 'Chưa có đơn vị',
+                fullName: fullName,
+              };
+            });
         });
       },
       error: (err) => console.error('Lỗi khi lấy Units hoặc Users:', err),
@@ -113,13 +130,12 @@ constructor(
     }
   }
   onUserSelectionChange(userId: number, event: any) {
-  if (event.target.checked) {
-    this.selectedUserId.push(userId);
-  } else {
-    this.selectedUserId = this.selectedUserId.filter(id => id !== userId);
+    if (event.target.checked) {
+      this.selectedUserId.push(userId);
+    } else {
+      this.selectedUserId = this.selectedUserId.filter((id) => id !== userId);
+    }
   }
-}
-
 
   onItemSelectionChange(itemId: number, event: any) {
     const isChecked = event.target.checked;
@@ -159,12 +175,17 @@ constructor(
 
     this.selectedUserId.forEach((userId) => {
       this.selectedItems.forEach((itemId) => {
+          const selectedItem = this.itemsByTemplate.find(i => i.id === itemId);
+          if (!selectedItem) return;
         const dto: AssignItemDto = {
           userId: userId,
           unitId: this.selectedUnitId,
           kpiItemId: itemId,
           year: this.selectedYear,
-          contributionWeight: this.contributionWeight ?? 100,
+          contributionWeight: this.contributionWeight ?? 0,
+          kpiName: selectedItem.kpiName,
+          kpiType: selectedItem.kpiType,
+          deadLine: new Date(selectedItem.deadLine)
         };
 
         this.kpiService.assignItem(dto).subscribe({
@@ -190,16 +211,15 @@ constructor(
       });
     });
   }
-get selectedUserNames() {
-  return this.filteredUsers
-    .filter(u => this.selectedUserId.includes(u.id))
-    .map(u => u.fullName);
-}
+  get selectedUserNames() {
+    return this.filteredUsers
+      .filter((u) => this.selectedUserId.includes(u.id))
+      .map((u) => u.fullName);
+  }
   toggleDropdown(event: Event) {
     this.dropdownOpen = !this.dropdownOpen;
     event.stopPropagation();
   }
-
 
   resetForm() {
     this.selectedUserId = [];

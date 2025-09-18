@@ -81,5 +81,10 @@ export class AuthService {
       headers: this.getAuthHeaders(),
     });
 }
+  getUserById(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${userId}`,{
+      headers: this.getAuthHeaders()
+    });
+  }
 
 }

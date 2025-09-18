@@ -91,6 +91,10 @@
     overflow: hidden; /* Giúp bo góc cho cả bảng */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
+.table th, 
+.table td {
+    border: 1px solid #e2e8f0;        
+}
 
 thead {
     background-color: #f1f5f9;
@@ -112,7 +116,7 @@ tbody {
         }
     }
     td {
-        padding: 12px;
+        padding: 5px;
         border-top: 1px solid #e2e8f0;
         font-size: 14px;
         color: #2d3748;
@@ -123,7 +127,7 @@ tbody {
     background-color: #e2e8f0 !important;
     font-weight: bold;
     font-size: 16px;
-    text-align: left;
+    text-align: center;
     padding: 12px;
     border-top: 2px solid #cbd5e0;
     border-bottom: 2px solid #cbd5e0;

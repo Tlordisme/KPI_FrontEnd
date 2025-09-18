@@ -26,16 +26,25 @@
   }
 
 table {
-  width: 100%; 
+  width: 100%;
   border-collapse: collapse; 
   table-layout: fixed; 
+  margin-bottom: 20px;
 }
 
 th, td {
-  border: 1px solid #e2e8f0;
+  border: 1px solid #ccc;
   padding: 8px;
   text-align: left;
   word-wrap: break-word; 
+}
+/* Input trong bảng */
+.table input[type="number"] {
+  width: 80px;
+  padding: 5px 8px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  text-align: center;
 }
 .action-col {
   width: 100px;        
@@ -60,4 +69,46 @@ td.action-col {
   font-weight: bold;
 }
 
+}
+
+/* Button */
+button {
+  display: block;
+  margin: 0 auto; 
+  padding: 10px 10px;
+  background:$primary-color ;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background:#1e40af ;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+.no-data-container {
+  text-align: center;
+  margin: 40px 0;
+}
+
+.no-data-icon {
+  font-size: 80px;      
+  color: #ccc;         
+  display: block;
+  margin-bottom: 20px;
+}
+
+.no-data-container p {
+  font-size: 16px;
+  color: #666;
+}
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin: 4px 0 0 0;
 }
