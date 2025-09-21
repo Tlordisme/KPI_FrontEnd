@@ -26,7 +26,7 @@
             <span class="material-icons expand-icon">
               {{ unitGroup.isExpanded ? 'expand_less' : 'expand_more' }}
             </span>
-            Đơn vị: {{ unitGroup.unitName }} (Tổng điểm trừ đơn vị:
+            Đơn vị: {{ unitGroup.unitName }} (Tổng điểm trừ của cá nhân:
             {{ unitGroup.totalUnitDeduction | number : '1.2-2' }})
           </h3>
         </div>
@@ -38,7 +38,7 @@
                 <span class="material-icons expand-icon">
                   {{ member.isExpanded ? 'expand_less' : 'expand_more' }}
                 </span>
-                Người vi phạm: <strong>{{ member.userName }}</strong> (Tổng điểm trừ cá nhân:
+                Người vi phạm: <strong>{{ member.userName }}</strong> (Tổng điểm trừ của cá nhân:
                 {{ member.totalDeduction | number : '1.2-2' }})
               </h4>
             </div>
@@ -80,7 +80,7 @@
             <span class="material-icons expand-icon">
               {{ unitVio.isExpanded ? 'expand_less' : 'expand_more' }}
             </span>
-            {{ unitVio.unitName }} (Tổng điểm trừ:
+            {{ unitVio.unitName }} (Điểm trù đơn vị:
             {{ unitVio.totalDeduction | number : '1.2-2' }})
           </h3>
         </div>
