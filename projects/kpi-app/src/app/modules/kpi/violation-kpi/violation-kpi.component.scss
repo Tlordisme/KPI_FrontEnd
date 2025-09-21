@@ -28,7 +28,17 @@
     }
   }
 
-  /* Bảng vi phạm */
+  .section-title {
+    font-size: 24px;
+    font-weight: 500;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    color: #0f172a;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 10px;
+  }
+
+  /* Bảng chung */
   .table {
     width: 100%;
     border-collapse: collapse;
@@ -36,19 +46,24 @@
 
     th,
     td {
-      border: 2px solid #ccc;
+      border: 1px solid #e2e8f0;
       padding: 12px;
       text-align: center;
       vertical-align: middle;
     }
 
     th {
-      background-color: #f3f4f6;
+      background-color: #f1f5f9;
       font-weight: 600;
+      color: #334155;
     }
 
-    tr:nth-child(even) {
-      background-color: #fafafa;
+    tbody tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    tbody tr:hover {
+      background-color: #e0f2f7;
     }
   }
 
@@ -64,7 +79,7 @@
       padding: 10px 24px;
       border: none;
       border-radius: 8px;
-      font-size: 10px;
+      font-size: 14px;
       cursor: pointer;
       transition: all 0.3s ease;
 
@@ -88,10 +103,16 @@
       }
     }
   }
+
   .totalDeduction {
     font-weight: bold;
-    color: #d92b04;
+    color: #dc3545;
   }
+
+  .text-right {
+    text-align: right;
+  }
+
   /* No data container */
   .no-data-container {
     display: flex;
@@ -100,22 +121,131 @@
     justify-content: center;
     padding: 40px 0;
     color: #888;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    margin-bottom: 30px;
 
     .no-data-icon {
       font-size: 48px;
       margin-bottom: 12px;
+      color: #a0aec0;
     }
 
     p {
       font-size: 18px;
+      color: #718096;
     }
   }
 }
+
 .form-button {
   display: flex;
   justify-content: space-between;
-  flex-direction: row;
   align-items: center;
   gap: 12px;
   margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Accordion (Drop-down) Styles                                               */
+/* -------------------------------------------------------------------------- */
+.accordion-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  user-select: none;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  .expand-icon {
+    margin-right: 10px;
+    font-size: 20px;
+    color: #555;
+    transition: transform 0.3s ease; /* Thêm transition cho icon */
+  }
+
+  // Quay icon khi mở
+  &.expanded .expand-icon {
+    transform: rotate(180deg);
+  }
+
+  h3, h4 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.unit-header {
+  background-color: #e0f7fa; /* Màu nền cho header đơn vị cá nhân */
+  border-left: 6px solid #00bcd4;
+  color: #006064;
+  font-size: 1.3em;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+.member-header {
+  background-color: #f3f5f7; /* Màu nền cho header cá nhân */
+  border-left: 4px solid #90caf9;
+  color: #3f51b5;
+  font-size: 1.1em;
+  font-weight: 500;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.unit-violation-summary-header {
+  background-color: #e8f5e9; /* Màu nền cho header vi phạm tổng hợp đơn vị */
+  border-left: 6px solid #4caf50;
+  color: #1b5e20;
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-top: 30px; /* Thêm khoảng cách rõ ràng */
+
+  &:hover {
+    background-color: #e0eee0;
+  }
+}
+
+.accordion-content {
+  margin-left: 40px;
+  padding: 10px 0;
+  border-left: 1px dashed #cfd8dc;
+  padding-left: 15px;
+  margin-bottom: 15px;
+}
+
+.member-details {
+  margin-left: 60px;
+  padding-left: 10px;
+  border-left: none;
+  // border-left: 1px dotted #b0bec5; /* Tùy chọn: nếu muốn đường chấm chấm cho chi tiết cá nhân */
+}
+
+.unit-violation-summary-details {
+    margin-left: 40px;
+    padding-left: 15px;
+    border-left: 1px dashed #a5d6a7; /* Border trái màu xanh lá nhạt */
+    margin-bottom: 20px;
+}
+
+/* Bảng cho vi phạm cá nhân chi tiết */
+.violation-personal-table {
+  width: calc(100% - 20px);
+  margin-left: 10px;
+}
+
+/* Bảng cho vi phạm đơn vị chi tiết */
+.unit-violation-detail-table {
+    width: calc(100% - 20px);
+    margin-left: 10px;
+    border-top: none; /* Bỏ border trên nếu không cần */
 }

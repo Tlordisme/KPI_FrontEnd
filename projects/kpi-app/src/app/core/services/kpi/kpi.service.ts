@@ -5,7 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { KpiItem } from '../../../modules/kpi/template-kpi/template-kpi.component';
 import { AssignItemDto } from '../../../modules/kpi/assigement-kpi/assigement-kpi.component';
 import { ApproveKpiAssignmentBulkDto } from '../../../modules/kpi/review-kpi/review-kpi.component';
-
+import { UnitViolationData  } from '../../../modules/kpi/violation-kpi/violation-kpi.component';
 @Injectable({
   providedIn: 'root',
 })
@@ -190,6 +190,12 @@ export class KpiService {
   }
   createCategoryLevel(level: any): Observable<any> {
     return this.http.post<any>(`${this.urlVio}/violationLevel`, level, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  getUnitViolationsById(unitId: number): Observable<UnitViolationData> {
+    return this.http.get<UnitViolationData>(`${this.urlVio}/unit/${unitId}`, {
       headers: this.getAuthHeaders(),
     });
   }

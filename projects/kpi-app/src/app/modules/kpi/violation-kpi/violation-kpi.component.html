@@ -9,8 +9,9 @@
     <div class="form-header">
       <h2>Vi phạm</h2>
     </div>
+
     <div class="form-button">
-      <h2>Các cá nhân vi phạm</h2>
+      <h2>Các vi phạm cá nhân theo đơn vị</h2>
       <div class="action-buttons">
         <button (click)="onCreate()">Ghi vi phạm</button>
         <button class="create" (click)="onCreateCategory()">Tạo vi phạm</button>
@@ -18,49 +19,107 @@
       </div>
     </div>
 
-    <div *ngIf="violations.length > 0; else noData">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Người vi phạm</th>
-            <th>Đơn vị</th>
-            <th>Loại vi phạm</th>
-            <th>Số lần vi phạm</th>
-            <th>Điểm trừ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngFor="let v of violations">
-            <tr *ngFor="let detail of v.details; let i = index">
-              <td *ngIf="i === 0" [attr.rowspan]="v.details.length">
-                {{ v.userName }}
-              </td>
-              <td *ngIf="i === 0" [attr.rowspan]="v.details.length">
-                {{ v.unitName }}
-              </td>
-              <td>{{ detail.categoryName }}</td>
-              <td>{{ detail.totalCount }}</td>
-              <td>{{ detail.totalComponent }}</td>
-            </tr>
-            <!-- Row tổng điểm -->
-            <tr>
-              <td colspan="3" class="text-right"><b>Tổng điểm trừ:</b></td>
-              <td colspan="2" class="totalDeduction">{{ v.totalDeduction }}</td>
-            </tr>
+    <div *ngIf="groupedViolations.length > 0; else noPersonalViolations">
+      <ng-container *ngFor="let unitGroup of groupedViolations">
+        <div class="accordion-header unit-header" (click)="toggleUnitExpansion(unitGroup)">
+          <h3>
+            <span class="material-icons expand-icon">
+              {{ unitGroup.isExpanded ? 'expand_less' : 'expand_more' }}
+            </span>
+            Đơn vị: {{ unitGroup.unitName }} (Tổng điểm trừ đơn vị:
+            {{ unitGroup.totalUnitDeduction | number : '1.2-2' }})
+          </h3>
+        </div>
+
+        <div *ngIf="unitGroup.isExpanded" class="accordion-content">
+          <ng-container *ngFor="let member of unitGroup.members">
+            <div class="accordion-header member-header" (click)="toggleMemberExpansion(member)">
+              <h4>
+                <span class="material-icons expand-icon">
+                  {{ member.isExpanded ? 'expand_less' : 'expand_more' }}
+                </span>
+                Người vi phạm: <strong>{{ member.userName }}</strong> (Tổng điểm trừ cá nhân:
+                {{ member.totalDeduction | number : '1.2-2' }})
+              </h4>
+            </div>
+
+            <div *ngIf="member.isExpanded" class="accordion-content member-details">
+              <table class="table violation-personal-table">
+                <thead>
+                  <tr>
+                    <th>Loại vi phạm</th>
+                    <th>Số lần vi phạm</th>
+                    <th>Điểm trừ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let detail of member.details">
+                    <td>{{ detail.categoryName }}</td>
+                    <td>{{ detail.totalCount }}</td>
+                    <td>{{ detail.totalComponent }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </ng-container>
-        </tbody>
-      </table>
+        </div>
+      </ng-container>
     </div>
-    <h2>Bảng vi phạm cá nhân</h2>
-    <!-- Chỉ render khi personalKpis đã load -->
-    <table class="table" *ngIf="personalKpis.length > 0">
+    <ng-template #noPersonalViolations>
+      <div class="no-data-container">
+        <span class="material-icons no-data-icon">assignment_late</span>
+        <p>Hiện chưa có vi phạm cá nhân nào được ghi nhận.</p>
+      </div>
+    </ng-template>
+
+    <h2 class="section-title">Tổng hợp vi phạm của các đơn vị</h2>
+    <div *ngIf="allUnitsViolations.length > 0; else noUnitViolations">
+      <ng-container *ngFor="let unitVio of allUnitsViolations">
+        <div class="accordion-header unit-violation-summary-header" (click)="toggleAllUnitViolationExpansion(unitVio)">
+          <h3>
+            <span class="material-icons expand-icon">
+              {{ unitVio.isExpanded ? 'expand_less' : 'expand_more' }}
+            </span>
+            {{ unitVio.unitName }} (Tổng điểm trừ:
+            {{ unitVio.totalDeduction | number : '1.2-2' }})
+          </h3>
+        </div>
+
+        <div *ngIf="unitVio.isExpanded" class="accordion-content unit-violation-summary-details">
+          <table class="table unit-violation-detail-table">
+            <thead>
+              <tr>
+                <th>Loại vi phạm</th>
+                <th>Điểm trừ trung bình</th>
+                <th>Tổng thành phần</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let detail of unitVio.details">
+                <td>{{ detail.categoryName }}</td>
+                <td>{{ detail.averageDeduction | number : '1.2-2' }}</td>
+                <td>{{ detail.totalComponent | number : '1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+    </div>
+    <ng-template #noUnitViolations>
+      <div class="no-data-container">
+        <span class="material-icons no-data-icon">assignment_late</span>
+        <p>Hiện chưa có vi phạm đơn vị nào được ghi nhận.</p>
+      </div>
+    </ng-template>
+
+    <h2 class="section-title">Bảng định nghĩa KPI cá nhân</h2>
+    <table class="table" *ngIf="personalKpis.length > 0; else noPersonalKpis">
       <thead>
         <tr>
           <th>ID</th>
           <th>Tên KPI</th>
-          <!-- Lặp đủ cột dựa trên maxLevelCount -->
           <th *ngFor="let i of [].constructor(maxLevelCount); let idx = index">
-            {{ personalKpis[0]?.levels?.[idx]?.maxDeduction ?? 'x' }}
+            Mức {{ personalKpis[0]?.levels?.[idx]?.maxDeduction ?? '?' }} điểm
           </th>
         </tr>
       </thead>
@@ -69,25 +128,24 @@
           <tr>
             <td>{{ kpi.id }}</td>
             <td>{{ kpi.name }}</td>
-            <!-- Lặp đủ cột, điền 'x' nếu level chưa có dữ liệu -->
             <td
               *ngFor="let i of [].constructor(maxLevelCount); let idx = index"
             >
-              {{ kpi.levels?.[idx]?.description ?? 'x' }}
+              {{ kpi.levels?.[idx]?.description ?? '-' }}
             </td>
           </tr>
         </ng-container>
       </tbody>
     </table>
+    <ng-template #noPersonalKpis>
+      <div class="no-data-container">
+        <span class="material-icons no-data-icon">assignment_late</span>
+        <p>Chưa có định nghĩa KPI cá nhân nào.</p>
+      </div>
+    </ng-template>
 
-    <!-- Nếu chưa có dữ liệu thì thông báo -->
-    <div *ngIf="!personalKpis || personalKpis.length === 0">
-      Chưa có KPI nào.
-    </div>
-
-    <h2>Bảng vi phạm đơn vị</h2>
-
-    <table class="table">
+    <h2 class="section-title">Bảng định nghĩa KPI đơn vị</h2>
+    <table class="table" *ngIf="unitKpis.length > 0; else noUnitKpis">
       <thead>
         <tr>
           <th>ID</th>
@@ -100,17 +158,15 @@
         <tr *ngFor="let kpi of unitKpis">
           <td>{{ kpi.id }}</td>
           <td>{{ kpi.name }}</td>
-          <td><={{ kpi.targetValue }}</td>
-
+          <td>&lt;={{ kpi.targetValue }}</td>
           <td>{{ kpi.calculationFormula }}</td>
         </tr>
       </tbody>
     </table>
-
-    <ng-template #noData>
+    <ng-template #noUnitKpis>
       <div class="no-data-container">
         <span class="material-icons no-data-icon">assignment_late</span>
-        <p>Hiện chưa có vi phạm nào.</p>
+        <p>Chưa có định nghĩa KPI đơn vị nào.</p>
       </div>
     </ng-template>
   </div>
@@ -130,7 +186,6 @@
     (cancelEvent)="cancelCategory()"
   >
   </app-form-edit>
-  <!-- Form tạo level -->
   <app-form-edit
     [item]="createLevel"
     [fields]="levelFields"
