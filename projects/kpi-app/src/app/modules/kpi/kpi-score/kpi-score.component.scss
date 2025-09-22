@@ -6,158 +6,217 @@
   min-height: 1024px;
   margin: 0 auto;
   padding: 16px;
-  background: #f8fafc;
-  color: #0f172a;
+  background: #f0f2f5; // Nền sáng hơn
+  color: #1a202c; // Màu chữ tối hơn, dễ đọc hơn
   box-sizing: border-box;
+  font-family: 'Roboto', sans-serif; // Sử dụng font hiện đại hơn
 }
 
 .form-card {
   background-color: $card-bg;
   padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 12px; // Góc bo tròn hơn
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); // Bóng đổ nổi bật hơn
+  transition: transform 0.3s ease, box-shadow 0.3s ease; // Thêm hiệu ứng chuyển động
+}
 
-  .form-header {
+.form-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between; // Căn chỉnh các thành phần
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e2e8f0; // Đường viền dưới để phân tách
+  padding-bottom: 20px;
+
+  h2 {
+    font-size: 32px; // Kích thước chữ lớn hơn
+    font-weight: 700; // In đậm hơn
+    margin: 0;
+    color: #2c3e50;
+  }
+
+  .filter-section {
     display: flex;
     align-items: center;
-    margin-bottom: 30px;
+    gap: 10px;
 
-    h2 {
-      font-size: 28px;
+    label {
       font-weight: 500;
-      margin: 0;
+      color: #4a5568;
+    }
+
+    select {
+      padding: 10px 15px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      background-color: #f7fafc;
+      font-size: 16px;
+      cursor: pointer;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: #4c6883;
+        box-shadow: 0 0 0 3px rgba(76, 104, 131, 0.2);
+      }
     }
   }
 }
 
-/* Kiểu dáng chung cho Accordion Header */
+/* Hiệu ứng tải và lỗi */
+.loading-spinner, .error-message {
+  text-align: center;
+  padding: 50px 0;
+  font-size: 18px;
+  color: #6c7a89;
+  font-style: italic;
+}
+
+.error-message {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+/* Accordion Header */
 .accordion-header {
   display: flex;
   align-items: center;
-  padding: 18px 25px; /* Tăng lề */
-  margin-top: 15px; /* Tăng khoảng cách */
-  border-radius: 8px;
+  padding: 20px 30px; // Tăng lề để tạo khoảng trống
+  margin-top: 15px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
   user-select: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .accordion-header:hover {
   background-color: #eef1f3;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
 .accordion-header.unit-header {
-  background-color: #f0f4f7;
-  border: 1px solid #dcdfe4;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
 }
 
 .accordion-header.unit-header h3 {
-  color: #34495e;
-  font-size: 22px; /* Tăng kích thước chữ */
+  color: #2d3748;
+  font-size: 24px;
+  font-weight: 600;
   margin: 0;
 }
 
 .accordion-header .expand-icon {
-  margin-right: 12px; /* Tăng khoảng cách */
-  font-size: 28px; /* Tăng kích thước icon */
+  margin-right: 15px;
+  font-size: 30px;
   color: #3498db;
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease;
 }
 
-/* Nội dung bên trong accordion */
 .accordion-content {
-  padding: 25px; /* Tăng lề */
-  border-left: 1px solid #dcdfe4;
-  border-right: 1px solid #dcdfe4;
-  border-bottom: 1px solid #dcdfe4;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  background-color: #fdfdfd;
-  margin-bottom: 25px; /* Tăng khoảng cách */
+  padding: 30px; // Tăng lề
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: #ffffff;
+  margin-bottom: 25px;
 }
 
 .score-section h4 {
   color: #2980b9;
-  font-size: 20px; /* Tăng kích thước chữ */
+  font-size: 22px;
   margin-top: 0;
-  margin-bottom: 20px; /* Tăng khoảng cách */
+  margin-bottom: 20px;
   font-weight: 600;
 }
 
 .score-section hr {
   border: none;
-  border-top: 1px dashed #c0c0c0;
-  margin: 25px 0; /* Tăng khoảng cách */
+  border-top: 2px dashed #e2e8f0;
+  margin: 30px 0; // Tăng khoảng cách
 }
 
-/* Kiểu dáng bảng KPI */
+/* Bảng KPI */
 .kpi-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
-  font-size: 16px; /* Tăng kích thước chữ của bảng */
+  font-size: 16px;
+  border-radius: 8px;
+  overflow: hidden; // Giữ góc bo tròn cho bảng
 }
 
 .kpi-table thead th {
-  background-color: #ecf0f1;
-  color: #34495e;
-  padding: 14px 18px; /* Tăng lề */
+  background-color: #eef2f6; // Màu nền nhẹ nhàng hơn
+  color: #475569;
+  padding: 16px 20px;
   text-align: left;
-  border-bottom: 2px solid #dcdfe4;
+  border-bottom: 2px solid #cbd5e0;
   font-weight: 600;
+  text-transform: uppercase; // Chữ in hoa
+  letter-spacing: 0.5px;
 }
 
 .kpi-table tbody tr {
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f4f8;
+  transition: background-color 0.2s ease;
 }
 
 .kpi-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #f7f9fb;
 }
 
 .kpi-table tbody td {
-  padding: 14px 18px; /* Tăng lề */
-  color: #555;
+  padding: 16px 20px;
+  color: #334155;
   vertical-align: top;
 }
 
 .kpi-table tbody tr:hover {
-  background-color: #f5f5f5;
+  background-color: #e2e8f0;
 }
 
 /* Kiểu dáng cho "No Data" */
 .no-data-container {
   text-align: center;
-  padding: 40px 20px;
-  color: #7f8c8d;
+  padding: 50px 20px;
+  color: #94a3b8;
 }
 
 .no-data-icon {
-  font-size: 60px;
-  color: #bdc3c7;
-  margin-bottom: 10px;
+  font-size: 70px;
+  color: #cbd5e0;
+  margin-bottom: 15px;
 }
 
-/* Style cho ô chứa chi tiết điểm */
+/* Style cho chi tiết điểm */
 .kpi-table .score-details-cell {
   text-align: left;
   vertical-align: middle;
 }
 
-/* Style cho container chi tiết điểm */
 .score-details {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Tăng khoảng cách giữa các dòng */
-  font-size: 16px; /* Tăng kích thước chữ của phần chi tiết */
-  line-height: 1.5;
+  gap: 10px;
+  font-size: 15px;
+  line-height: 1.6;
 }
 
-/* Style cho mỗi dòng chi tiết điểm */
 .score-details > div {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px dashed #e0e0e0;
+  align-items: center;
+  border-bottom: 1px dashed #e0e6ee;
   padding-bottom: 5px;
 }
 
@@ -168,10 +227,47 @@
 
 .score-details span {
   font-weight: 500;
-  color: #333;
+  color: #475569;
 }
 
 .score-details .score-value {
-  font-weight: 600;
+  font-weight: 700;
   color: #2980b9;
+  background-color: #e6f0f7;
+  padding: 2px 8px;
+  border-radius: 4px;
 }
+/* Badge chung */
+.rank-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+  min-width: 40px;
+}
+
+/* Các màu theo Rank */
+.rank-a {
+  background-color: #16a34a; // xanh lá đậm
+}
+
+.rank-b {
+  background-color: #2563eb; // xanh dương
+}
+
+.rank-c {
+  background-color: #eab308; // vàng
+  color: #000;
+}
+
+.rank-d {
+  background-color: #f97316; // cam
+}
+
+.rank-f {
+  background-color: #dc2626; // đỏ
+}
+

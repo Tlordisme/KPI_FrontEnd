@@ -5,7 +5,7 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 
-// Giao diện cho các kiểu dữ liệu
+// Giao diện cho các kiểu dữ liệu (đã cập nhật)
 export interface Unit {
   id: number;
   name: string;
@@ -22,11 +22,15 @@ export interface UserKpiScore {
   }[];
   finishTotal: number;
   userName?: string;
+  rank?: string; // Thêm trường xếp loại
+}
+
+export interface AllMemberKpiScore extends UserKpiScore {
+  unitName?: string;
 }
 
 export interface HeadOfUnitKpiScore extends UserKpiScore {}
 
-// Cấu trúc dữ liệu để hiển thị
 export interface UnitKpiDisplayData {
   unit: Unit;
   headOfUnitScore: HeadOfUnitKpiScore | null;
@@ -41,100 +45,127 @@ export interface UnitKpiDisplayData {
 })
 export class KpiScoreComponent implements OnInit {
   allUnitsData: UnitKpiDisplayData[] = [];
+  allMembersData: AllMemberKpiScore[] = [];
   loading = true;
   error: string | null = null;
   year = new Date().getFullYear();
   sidebarOpen: boolean = false;
+  selectedUnitId: number | 'all' = 'all';
 
-  constructor(private kpiService: KpiService, private authService: AuthService) {}
+  constructor(
+    private kpiService: KpiService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.loadAllUnitsKpiData();
+    this.loadAllKpiData();
   }
 
-  loadAllUnitsKpiData(): void {
+  loadAllKpiData(): void {
     this.loading = true;
     this.error = null;
 
     this.kpiService.getUnits().pipe(
-      mergeMap((units: Unit[]) => {
+      mergeMap(units => {
         if (!units || units.length === 0) {
-          return of([]);
+          return of({ unitsData: [] });
         }
 
-        const unitKpiRequests: Observable<UnitKpiDisplayData>[] = units.map((unit) =>
-          forkJoin({
-            headOfUnit: this.authService.getUserById(unit.headOfUnitId).pipe(catchError(() => of(null))),
-            allUnitAssignments: this.kpiService.getAssignmentsByUnitMembers(this.year).pipe(catchError(() => of([]))),
-          }).pipe(
-            mergeMap((results) => {
-              const headOfUnitUser = results.headOfUnit;
-              const allUnitAssignments = results.allUnitAssignments;
-
-              const membersAssignments = allUnitAssignments.filter(
-                (assignment: any) => assignment.unitId === unit.id
-              );
-
-              const memberKpiObservables = membersAssignments.map((assignment: any) =>
-                this.kpiService.getComponentScoresByUserId(assignment.userId).pipe(
-                  mergeMap(memberScore =>
-                    this.authService.getUserById(assignment.userId).pipe(
-                      map(user => ({ ...memberScore, userName: user?.fullName || 'Người dùng không xác định' })),
-                      catchError(() => of({ ...memberScore, userName: 'Không rõ' } as UserKpiScore)) // Đảm bảo kiểu trả về là UserKpiScore
-                    )
+        const unitKpiRequests: Observable<UnitKpiDisplayData>[] = units.map(unit =>
+          this.kpiService.getAssignmentsByUnit(unit.id, this.year).pipe(
+            mergeMap(membersAssignments => {
+              const memberKpiObservables = membersAssignments.map(assignment =>
+                forkJoin({
+                  score: this.kpiService.getComponentScoresByUserId(assignment.userId).pipe(
+                    catchError(() => of(null))
                   ),
-                  catchError(() => of(null)) // Vẫn trả về null nếu request lỗi hoàn toàn
+                  rank: this.kpiService.getUserRank(assignment.userId, this.year).pipe(
+                    catchError(() => of(null))
+                  ),
+                  user: this.authService.getUserById(assignment.userId).pipe(
+                    catchError(() => of(null))
+                  ),
+                }).pipe(
+                  map(({ score, rank, user }) => {
+                    if (!score || !user) return null;
+                    return {
+                      ...score,
+                      userName: user.fullName,
+                      rank: rank?.rank, // Gán xếp loại
+                    } as UserKpiScore;
+                  })
                 )
               );
 
-              const headOfUnitScore$ = unit.headOfUnitId ? this.kpiService.getFinalScoreByUserId(unit.headOfUnitId).pipe(
-                catchError(() => of(null))
-              ) : of(null);
+              const headOfUnitScore$ = unit.headOfUnitId
+                ? forkJoin({
+                    score: this.kpiService.getFinalScoreByUserId(unit.headOfUnitId).pipe(
+                      catchError(() => of(null))
+                    ),
+                    rank: this.kpiService.getUserRank(unit.headOfUnitId, this.year).pipe(
+                      catchError(() => of(null))
+                    ),
+                    user: this.authService.getUserById(unit.headOfUnitId).pipe(
+                      catchError(() => of(null))
+                    ),
+                  }).pipe(
+                    map(({ score, rank, user }) => {
+                      if (!score || !user) return null;
+                      return {
+                        ...score,
+                        userName: user.fullName,
+                        rank: rank?.rank, // Gán xếp loại
+                      } as HeadOfUnitKpiScore;
+                    })
+                  )
+                : of(null);
 
-              return forkJoin([
-                ...memberKpiObservables,
-                headOfUnitScore$
-              ]).pipe(
-                map((allResults) => {
-                  const membersScores = allResults.slice(0, allResults.length - 1).filter((s): s is UserKpiScore => s !== null);
-                  const headOfUnitScore = allResults[allResults.length - 1];
+              return forkJoin([...memberKpiObservables, headOfUnitScore$]).pipe(
+                map(allResults => {
+                  const headOfUnitScore = allResults.pop() as HeadOfUnitKpiScore | null;
+                  const membersScores = allResults.filter(s => !!s && s.userId !== headOfUnitScore?.userId) as UserKpiScore[];
 
                   return {
-                    unit: unit,
-                    headOfUnitScore: headOfUnitScore,
-                    membersScores: membersScores,
+                    unit,
+                    headOfUnitScore,
+                    membersScores,
                     isExpanded: false,
-                  };
+                  } as UnitKpiDisplayData;
                 }),
                 catchError(err => {
-                  console.error(`Lỗi khi xử lý dữ liệu cho đơn vị ${unit.name}:`, err);
+                  console.error(`Lỗi khi xử lý đơn vị ${unit.name}:`, err);
                   return of({
-                    unit: unit,
+                    unit,
                     headOfUnitScore: null,
                     membersScores: [],
                     isExpanded: false,
-                  });
+                  } as UnitKpiDisplayData);
                 })
               );
             })
           )
         );
-        return forkJoin(unitKpiRequests);
+
+        return forkJoin(unitKpiRequests).pipe(
+          map(unitsData => ({
+            unitsData,
+          }))
+        );
       }),
-      catchError((err) => {
-        this.error = 'Đã xảy ra lỗi khi tải dữ liệu KPI. Vui lòng thử lại sau.';
-        console.error('Lỗi chính trong loadAllUnitsKpiData:', err);
-        return of([]);
+      catchError(err => {
+        this.error = 'Đã xảy ra lỗi khi tải dữ liệu KPI.';
+        console.error('Lỗi loadAllKpiData:', err);
+        return of({ unitsData: [] });
       })
     ).subscribe({
       next: (data) => {
-        this.allUnitsData = data;
+        this.allUnitsData = data.unitsData;
         this.loading = false;
       },
-      error: (err) => {
+      error: () => {
         this.loading = false;
         this.error = 'Lỗi không xác định khi tải dữ liệu.';
-      }
+      },
     });
   }
 
@@ -144,5 +175,12 @@ export class KpiScoreComponent implements OnInit {
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  get filteredUnitsData(): UnitKpiDisplayData[] {
+    if (this.selectedUnitId === 'all') {
+      return this.allUnitsData;
+    }
+    return this.allUnitsData.filter(u => u.unit.id === this.selectedUnitId);
   }
 }

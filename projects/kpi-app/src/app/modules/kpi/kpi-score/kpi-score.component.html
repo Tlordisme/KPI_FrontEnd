@@ -8,6 +8,19 @@
   <div class="form-card">
     <div class="form-header">
       <h2>Điểm KPI của các Đơn vị và Cá nhân</h2>
+
+      <div class="filter-section">
+        <label for="unitFilter">Chọn đơn vị:</label>
+        <select id="unitFilter" [(ngModel)]="selectedUnitId">
+          <option value="all">Tất cả</option>
+          <option
+            *ngFor="let unitData of allUnitsData"
+            [ngValue]="unitData.unit.id"
+          >
+            {{ unitData.unit.name }}
+          </option>
+        </select>
+      </div>
     </div>
 
     <div *ngIf="loading" class="loading-spinner">
@@ -20,11 +33,14 @@
 
     <div *ngIf="!loading && !error">
       <div *ngIf="allUnitsData.length > 0; else noData">
-        <ng-container *ngFor="let unitData of allUnitsData">
-          <div class="accordion-header unit-header" (click)="toggleExpansion(unitData)">
+        <ng-container *ngFor="let unitData of filteredUnitsData">
+          <div
+            class="accordion-header unit-header"
+            (click)="toggleExpansion(unitData)"
+          >
             <h3>
               <span class="material-icons expand-icon">
-                {{ unitData.isExpanded ? 'expand_less' : 'expand_more' }}
+                {{ unitData.isExpanded ? "expand_less" : "expand_more" }}
               </span>
               Đơn vị: {{ unitData.unit.name }}
             </h3>
@@ -37,18 +53,51 @@
                 <table class="table kpi-table">
                   <thead>
                     <tr>
+                      <th>Tên trưởng đơn vị</th>
                       <th>Tổng điểm</th>
-                      <th *ngIf="unitData.headOfUnitScore.scoresByType.length > 0">Điểm chi tiết</th>
+                      <th>Xếp loại</th>
+                      <th
+                        *ngIf="unitData.headOfUnitScore.scoresByType.length > 0"
+                      >
+                        Điểm chi tiết
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{{ unitData.headOfUnitScore.finishTotal | number:'1.2-2' }}</td>
-                      <td *ngIf="unitData.headOfUnitScore.scoresByType.length > 0" class="score-details-cell">
+                      <td>{{ unitData.headOfUnitScore.userName }}</td>
+                      <td>
+                        {{
+                          unitData.headOfUnitScore.finishTotal
+                            | number : "1.2-2"
+                        }}
+                      </td>
+                      <td>
+                        <span
+                          class="rank-badge"
+                          [ngClass]="
+                            'rank-' +
+                            (unitData.headOfUnitScore.rank | lowercase)
+                          "
+                        >
+                          {{ unitData.headOfUnitScore.rank }}
+                        </span>
+                      </td>
+
+                      <td
+                        *ngIf="unitData.headOfUnitScore.scoresByType.length > 0"
+                        class="score-details-cell"
+                      >
                         <div class="score-details">
-                          <div *ngFor="let score of unitData.headOfUnitScore.scoresByType">
+                          <div
+                            *ngFor="
+                              let score of unitData.headOfUnitScore.scoresByType
+                            "
+                          >
                             <span>{{ score.kpiType }}:</span>
-                            <span class="score-value">{{ score.totalComponentScore | number:'1.2-2' }}</span>
+                            <span class="score-value">{{
+                              score.totalComponentScore | number : "1.2-2"
+                            }}</span>
                           </div>
                         </div>
                       </td>
@@ -61,28 +110,41 @@
               </ng-template>
             </div>
 
-            <hr>
+            <hr />
 
             <div class="score-section">
               <h4>Điểm KPI của các thành viên</h4>
+              <
               <div *ngIf="unitData.membersScores.length > 0; else noMembers">
                 <table class="table kpi-table">
                   <thead>
                     <tr>
                       <th>Tên thành viên</th>
                       <th>Tổng điểm</th>
+                      <th>Xếp loại</th>
                       <th>Điểm chi tiết</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let memberScore of unitData.membersScores">
                       <td>{{ memberScore.userName }}</td>
-                      <td>{{ memberScore.finishTotal | number:'1.2-2' }}</td>
+                      <td>{{ memberScore.finishTotal | number : "1.2-2" }}</td>
+                      <td>
+                        <span
+                          class="rank-badge"
+                          [ngClass]="'rank-' + (memberScore.rank | lowercase)"
+                        >
+                          {{ memberScore.rank }}
+                        </span>
+                      </td>
+
                       <td class="score-details-cell">
                         <div class="score-details">
                           <div *ngFor="let score of memberScore.scoresByType">
                             <span>{{ score.kpiType }}:</span>
-                            <span class="score-value">{{ score.totalComponentScore | number:'1.2-2' }}</span>
+                            <span class="score-value">{{
+                              score.totalComponentScore | number : "1.2-2"
+                            }}</span>
                           </div>
                         </div>
                       </td>
@@ -91,7 +153,9 @@
                 </table>
               </div>
               <ng-template #noMembers>
-                <p>Không có dữ liệu điểm KPI cho các thành viên trong đơn vị này.</p>
+                <p>
+                  Không có dữ liệu điểm KPI cho các thành viên trong đơn vị này.
+                </p>
               </ng-template>
             </div>
           </div>

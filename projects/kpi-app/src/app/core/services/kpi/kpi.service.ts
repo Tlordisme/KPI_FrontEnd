@@ -5,8 +5,11 @@ import { AuthService } from '../auth/auth.service';
 import { KpiItem } from '../../../modules/kpi/template-kpi/template-kpi.component';
 import { AssignItemDto } from '../../../modules/kpi/assigement-kpi/assigement-kpi.component';
 import { ApproveKpiAssignmentBulkDto } from '../../../modules/kpi/review-kpi/review-kpi.component';
-import { UnitViolationData  } from '../../../modules/kpi/violation-kpi/violation-kpi.component';
-import { HeadOfUnitKpiScore, UserKpiScore } from '../../../modules/kpi/kpi-score/kpi-score.component';
+import { UnitViolationData } from '../../../modules/kpi/violation-kpi/violation-kpi.component';
+import {
+  HeadOfUnitKpiScore,
+  UserKpiScore,
+} from '../../../modules/kpi/kpi-score/kpi-score.component';
 @Injectable({
   providedIn: 'root',
 })
@@ -100,10 +103,10 @@ export class KpiService {
     });
   }
   getUnitById(unitId: number): Observable<any> {
-  return this.http.get<any>(`${this.url}/Unit/units/${unitId}`, {
-    headers: this.getAuthHeaders(),
-  });
-}
+    return this.http.get<any>(`${this.url}/Unit/units/${unitId}`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
 
   assignItem(dto: AssignItemDto): Observable<any> {
     return this.http.post(`${this.url}/Assignment/assign-item`, dto, {
@@ -111,11 +114,14 @@ export class KpiService {
     });
   }
   getUserAssignments(userId: number): Observable<any> {
-    return this.http.get<any>(`${this.url}/Assignment/user/${userId}`,{
-      headers: this.getAuthHeaders()
+    return this.http.get<any>(`${this.url}/Assignment/user/${userId}`, {
+      headers: this.getAuthHeaders(),
     });
   }
-  selfEvaluate(dto: { assignmentId: number, actualResults: number }): Observable<any> {
+  selfEvaluate(dto: {
+    assignmentId: number;
+    actualResults: number;
+  }): Observable<any> {
     return this.http.post<any>(`${this.url}/Assignment/self-evaluate`, dto, {
       headers: this.getAuthHeaders(),
     });
@@ -139,6 +145,16 @@ export class KpiService {
     });
   }
 
+  // Trong kpi.service.ts
+  getAssignmentsByUnit(unitId: number, year: number): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.urlAssignment}/unit/${unitId}/${year}`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
   // Lấy assignments của các trưởng đơn vị
   getUnitAssignments(year: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.url}/Assignment/units/${year}`, {
@@ -153,7 +169,7 @@ export class KpiService {
     });
   }
 
-// Gửi yêu cầu phê duyệt hàng loạt các KPI Assignment
+  // Gửi yêu cầu phê duyệt hàng loạt các KPI Assignment
   approveKpiAssignmentsBulk(dto: ApproveKpiAssignmentBulkDto): Observable<any> {
     // Gọi endpoint bulk-approve mới
     return this.http.post(`${this.url}/Approval/bulk-approve`, dto, {
@@ -202,19 +218,26 @@ export class KpiService {
     });
   }
 
-
   // Phương thức mới: Lấy điểm KPI tổng hợp của một người dùng
   getComponentScoresByUserId(userId: number): Observable<UserKpiScore> {
-    return this.http.get<UserKpiScore>(`${this.urlAssignment}/componentScores/${userId}`, {
-      headers: this.getAuthHeaders(),
-    });
+    return this.http.get<UserKpiScore>(
+      `${this.urlAssignment}/componentScores/${userId}`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
   }
 
   // Phương thức mới: Lấy điểm KPI cuối cùng của Trưởng đơn vị/Đơn vị
   getFinalScoreByUserId(userId: number): Observable<HeadOfUnitKpiScore> {
-    return this.http.get<HeadOfUnitKpiScore>(`${this.urlAssignment}/final-score/${userId}`, {
-      headers: this.getAuthHeaders(),
-    });
+    return this.http.get<HeadOfUnitKpiScore>(
+      `${this.urlAssignment}/final-score/${userId}`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
   }
-
+  getUserRank(userId: number, year: number): Observable<any> {
+  return this.http.get<any>(`http://localhost:5118/rank/${userId}/${year}`);
+}
 }
