@@ -1,9 +1,11 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
+
 })
 export class SidebarComponent {
   // Use @Input() to receive the 'sidebarOpen' state from the parent component.
@@ -13,7 +15,7 @@ export class SidebarComponent {
   @Output() toggleSidebarEvent = new EventEmitter<void>();
 
   // A local property to control the dropdown menu's state.
-  dropdownOpen: boolean = true;
+  dropdownOpen: boolean = false;
 
   // Method to emit an event to the parent component, signaling it to toggle the sidebar.
   toggleSidebar(): void {

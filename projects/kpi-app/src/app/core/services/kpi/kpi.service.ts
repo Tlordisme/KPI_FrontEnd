@@ -6,6 +6,7 @@ import { KpiItem } from '../../../modules/kpi/template-kpi/template-kpi.componen
 import { AssignItemDto } from '../../../modules/kpi/assigement-kpi/assigement-kpi.component';
 import { ApproveKpiAssignmentBulkDto } from '../../../modules/kpi/review-kpi/review-kpi.component';
 import { UnitViolationData  } from '../../../modules/kpi/violation-kpi/violation-kpi.component';
+import { HeadOfUnitKpiScore, UserKpiScore } from '../../../modules/kpi/kpi-score/kpi-score.component';
 @Injectable({
   providedIn: 'root',
 })
@@ -13,6 +14,7 @@ export class KpiService {
   private apiUrl = 'http://localhost:5118/api/Kpi'; // port KPI service
   private url = 'http://localhost:5118/api';
   private urlVio = 'http://localhost:5118/api/Violation';
+  private urlAssignment = 'http://localhost:5118/api/Assignment';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -196,6 +198,21 @@ export class KpiService {
 
   getUnitViolationsById(unitId: number): Observable<UnitViolationData> {
     return this.http.get<UnitViolationData>(`${this.urlVio}/unit/${unitId}`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+
+  // Phương thức mới: Lấy điểm KPI tổng hợp của một người dùng
+  getComponentScoresByUserId(userId: number): Observable<UserKpiScore> {
+    return this.http.get<UserKpiScore>(`${this.urlAssignment}/componentScores/${userId}`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  // Phương thức mới: Lấy điểm KPI cuối cùng của Trưởng đơn vị/Đơn vị
+  getFinalScoreByUserId(userId: number): Observable<HeadOfUnitKpiScore> {
+    return this.http.get<HeadOfUnitKpiScore>(`${this.urlAssignment}/final-score/${userId}`, {
       headers: this.getAuthHeaders(),
     });
   }

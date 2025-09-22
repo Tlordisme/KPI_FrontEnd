@@ -1,0 +1,108 @@
+<div class="page-container">
+  <app-topbar></app-topbar>
+  <app-sidebar
+    [sidebarOpen]="sidebarOpen"
+    (toggleSidebarEvent)="toggleSidebar()"
+  ></app-sidebar>
+
+  <div class="form-card">
+    <div class="form-header">
+      <h2>Điểm KPI của các Đơn vị và Cá nhân</h2>
+    </div>
+
+    <div *ngIf="loading" class="loading-spinner">
+      <p>Đang tải dữ liệu KPI...</p>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+      {{ error }}
+    </div>
+
+    <div *ngIf="!loading && !error">
+      <div *ngIf="allUnitsData.length > 0; else noData">
+        <ng-container *ngFor="let unitData of allUnitsData">
+          <div class="accordion-header unit-header" (click)="toggleExpansion(unitData)">
+            <h3>
+              <span class="material-icons expand-icon">
+                {{ unitData.isExpanded ? 'expand_less' : 'expand_more' }}
+              </span>
+              Đơn vị: {{ unitData.unit.name }}
+            </h3>
+          </div>
+
+          <div *ngIf="unitData.isExpanded" class="accordion-content">
+            <div class="score-section">
+              <h4>Điểm KPI của Trưởng đơn vị</h4>
+              <div *ngIf="unitData.headOfUnitScore; else noHeadOfUnitScore">
+                <table class="table kpi-table">
+                  <thead>
+                    <tr>
+                      <th>Tổng điểm</th>
+                      <th *ngIf="unitData.headOfUnitScore.scoresByType.length > 0">Điểm chi tiết</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{ unitData.headOfUnitScore.finishTotal | number:'1.2-2' }}</td>
+                      <td *ngIf="unitData.headOfUnitScore.scoresByType.length > 0" class="score-details-cell">
+                        <div class="score-details">
+                          <div *ngFor="let score of unitData.headOfUnitScore.scoresByType">
+                            <span>{{ score.kpiType }}:</span>
+                            <span class="score-value">{{ score.totalComponentScore | number:'1.2-2' }}</span>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <ng-template #noHeadOfUnitScore>
+                <p>Không có dữ liệu điểm KPI cho trưởng đơn vị.</p>
+              </ng-template>
+            </div>
+
+            <hr>
+
+            <div class="score-section">
+              <h4>Điểm KPI của các thành viên</h4>
+              <div *ngIf="unitData.membersScores.length > 0; else noMembers">
+                <table class="table kpi-table">
+                  <thead>
+                    <tr>
+                      <th>Tên thành viên</th>
+                      <th>Tổng điểm</th>
+                      <th>Điểm chi tiết</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let memberScore of unitData.membersScores">
+                      <td>{{ memberScore.userName }}</td>
+                      <td>{{ memberScore.finishTotal | number:'1.2-2' }}</td>
+                      <td class="score-details-cell">
+                        <div class="score-details">
+                          <div *ngFor="let score of memberScore.scoresByType">
+                            <span>{{ score.kpiType }}:</span>
+                            <span class="score-value">{{ score.totalComponentScore | number:'1.2-2' }}</span>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <ng-template #noMembers>
+                <p>Không có dữ liệu điểm KPI cho các thành viên trong đơn vị này.</p>
+              </ng-template>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <ng-template #noData>
+        <div class="no-data-container">
+          <span class="material-icons no-data-icon">assignment_late</span>
+          <p>Hiện chưa có dữ liệu KPI của đơn vị nào được ghi nhận.</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

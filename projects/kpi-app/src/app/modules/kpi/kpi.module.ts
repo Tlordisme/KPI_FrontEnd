@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -13,6 +13,8 @@ import { AssigementKpiComponent } from './assigement-kpi/assigement-kpi.componen
 import { ReviewKpiComponent } from './review-kpi/review-kpi.component';
 import { EvaluateKpiComponent } from './evaluate-kpi/evaluate-kpi.component';
 import { ViolationKpiComponent } from './violation-kpi/violation-kpi.component';
+import { KpiScoreComponent } from './kpi-score/kpi-score.component';
+
 
 const routes: Routes = [
   { path: 'assign', component: AssignKpiComponent },
@@ -20,7 +22,8 @@ const routes: Routes = [
   { path: 'assigement', component: AssigementKpiComponent },
   { path: 'review', component: ReviewKpiComponent },
   { path: 'evaluate', component:EvaluateKpiComponent},
-  { path: 'violation', component:ViolationKpiComponent}
+  { path: 'violation', component:ViolationKpiComponent},
+  { path: 'score', component:KpiScoreComponent}
 ];
 
 @NgModule({
@@ -31,6 +34,7 @@ const routes: Routes = [
     ReviewKpiComponent,
     EvaluateKpiComponent,
     ViolationKpiComponent,
+    KpiScoreComponent,
   ],
   imports: [
     CommonModule,
@@ -39,6 +43,7 @@ const routes: Routes = [
     SharedModule,
     MatSnackBarModule,
     MatIconModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class KpiModule {}

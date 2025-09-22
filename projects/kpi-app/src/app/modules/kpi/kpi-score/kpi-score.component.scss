@@ -1,0 +1,177 @@
+@use '../../../../styles.scss' as *;
+
+/* Cấu trúc chung */
+.page-container {
+  width: 1440px;
+  min-height: 1024px;
+  margin: 0 auto;
+  padding: 16px;
+  background: #f8fafc;
+  color: #0f172a;
+  box-sizing: border-box;
+}
+
+.form-card {
+  background-color: $card-bg;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+  .form-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+
+    h2 {
+      font-size: 28px;
+      font-weight: 500;
+      margin: 0;
+    }
+  }
+}
+
+/* Kiểu dáng chung cho Accordion Header */
+.accordion-header {
+  display: flex;
+  align-items: center;
+  padding: 18px 25px; /* Tăng lề */
+  margin-top: 15px; /* Tăng khoảng cách */
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  user-select: none;
+}
+
+.accordion-header:hover {
+  background-color: #eef1f3;
+}
+
+.accordion-header.unit-header {
+  background-color: #f0f4f7;
+  border: 1px solid #dcdfe4;
+}
+
+.accordion-header.unit-header h3 {
+  color: #34495e;
+  font-size: 22px; /* Tăng kích thước chữ */
+  margin: 0;
+}
+
+.accordion-header .expand-icon {
+  margin-right: 12px; /* Tăng khoảng cách */
+  font-size: 28px; /* Tăng kích thước icon */
+  color: #3498db;
+  transition: transform 0.2s ease;
+}
+
+/* Nội dung bên trong accordion */
+.accordion-content {
+  padding: 25px; /* Tăng lề */
+  border-left: 1px solid #dcdfe4;
+  border-right: 1px solid #dcdfe4;
+  border-bottom: 1px solid #dcdfe4;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  background-color: #fdfdfd;
+  margin-bottom: 25px; /* Tăng khoảng cách */
+}
+
+.score-section h4 {
+  color: #2980b9;
+  font-size: 20px; /* Tăng kích thước chữ */
+  margin-top: 0;
+  margin-bottom: 20px; /* Tăng khoảng cách */
+  font-weight: 600;
+}
+
+.score-section hr {
+  border: none;
+  border-top: 1px dashed #c0c0c0;
+  margin: 25px 0; /* Tăng khoảng cách */
+}
+
+/* Kiểu dáng bảng KPI */
+.kpi-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 16px; /* Tăng kích thước chữ của bảng */
+}
+
+.kpi-table thead th {
+  background-color: #ecf0f1;
+  color: #34495e;
+  padding: 14px 18px; /* Tăng lề */
+  text-align: left;
+  border-bottom: 2px solid #dcdfe4;
+  font-weight: 600;
+}
+
+.kpi-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.kpi-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.kpi-table tbody td {
+  padding: 14px 18px; /* Tăng lề */
+  color: #555;
+  vertical-align: top;
+}
+
+.kpi-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Kiểu dáng cho "No Data" */
+.no-data-container {
+  text-align: center;
+  padding: 40px 20px;
+  color: #7f8c8d;
+}
+
+.no-data-icon {
+  font-size: 60px;
+  color: #bdc3c7;
+  margin-bottom: 10px;
+}
+
+/* Style cho ô chứa chi tiết điểm */
+.kpi-table .score-details-cell {
+  text-align: left;
+  vertical-align: middle;
+}
+
+/* Style cho container chi tiết điểm */
+.score-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Tăng khoảng cách giữa các dòng */
+  font-size: 16px; /* Tăng kích thước chữ của phần chi tiết */
+  line-height: 1.5;
+}
+
+/* Style cho mỗi dòng chi tiết điểm */
+.score-details > div {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed #e0e0e0;
+  padding-bottom: 5px;
+}
+
+.score-details > div:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.score-details span {
+  font-weight: 500;
+  color: #333;
+}
+
+.score-details .score-value {
+  font-weight: 600;
+  color: #2980b9;
+}

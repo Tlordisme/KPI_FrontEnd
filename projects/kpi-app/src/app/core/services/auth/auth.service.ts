@@ -18,6 +18,8 @@ export interface LoginResponse {
   address: string;
   role: string;
   token: string;
+  unitId: number;
+  roles: string[];
 }
 
 @Injectable({
@@ -47,7 +49,7 @@ export class AuthService {
       })
     );
   }
-  
+
 
   saveToken(token: string): void {
     localStorage.setItem('jwtToken', token);
@@ -64,6 +66,10 @@ export class AuthService {
   getUser(): LoginResponse | null {
     const user = localStorage.getItem('currentUser');
     return user ? JSON.parse(user) : null;
+  }
+  getUserId(): number | null {
+    const user = this.getUser();
+    return user ? user.userID : null;
   }
 
   logout(): void {

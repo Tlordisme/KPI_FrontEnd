@@ -65,7 +65,7 @@
           Giao KPI
         </button>
 
-        
+
         <button
           class="nav-item sub-item"
           routerLink="/kpi/evaluate"
@@ -86,9 +86,14 @@
           Vi phạm
         </button>
 
-        <button class="nav-item sub-item">
-          <mat-icon>file_download</mat-icon>
-          Xuất Excel/PDF
+        <button
+          class="nav-item sub-item"
+          routerLink="/kpi/score"
+          routerLinkActive="active"
+          (click)="closeSidebar()"
+        >
+          <mat-icon>score</mat-icon>
+          Điểm KPI
         </button>
       </div>
     </div>
