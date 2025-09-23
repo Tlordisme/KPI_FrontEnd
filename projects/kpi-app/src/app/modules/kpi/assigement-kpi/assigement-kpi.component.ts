@@ -82,13 +82,13 @@ export class AssigementKpiComponent implements OnInit {
         this.units = units;
         this.authService.getUsers().subscribe((users) => {
           this.users = users
-            .filter((u: any) => u.userID !== currentUserId)
+            .filter((u) => u.id !== currentUserId)
             .map((u: any) => {
               const unit = this.units.find((x: any) => x.id === u.unitId);
               const isHead = unit && unit.headOfUnitId === u.id; // check trưởng khoa
               let fullName = u.fullName;
               if (isHead) {
-                fullName += ' (Trưởng khoa)';
+                fullName += '  (Trưởng khoa)';
               }
               return {
                 ...u,
@@ -182,7 +182,7 @@ export class AssigementKpiComponent implements OnInit {
           unitId: this.selectedUnitId,
           kpiItemId: itemId,
           year: this.selectedYear,
-          contributionWeight: this.contributionWeight ?? 0,
+          contributionWeight: this.contributionWeight ?? 100,
           kpiName: selectedItem.kpiName,
           kpiType: selectedItem.kpiType,
           deadLine: new Date(selectedItem.deadLine)

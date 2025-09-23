@@ -118,9 +118,10 @@
         <tr>
           <th>ID</th>
           <th>Tên KPI</th>
-          <th *ngFor="let i of [].constructor(maxLevelCount); let idx = index">
-            Mức {{ personalKpis[0]?.levels?.[idx]?.maxDeduction ?? '?' }} điểm
-          </th>
+        <th *ngFor="let level of getSortedLevels()">
+  Mức {{ level.maxDeduction }} điểm
+</th>
+
         </tr>
       </thead>
       <tbody>

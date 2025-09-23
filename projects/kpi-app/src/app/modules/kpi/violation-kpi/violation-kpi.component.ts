@@ -303,7 +303,7 @@ export class ViolationKpiComponent implements OnInit {
         this.units = units;
         this.authService.getUsers().subscribe((users) => {
           this.users = users
-            .filter((u: any) => u.userID !== currentUserId)
+            .filter((u) => u.id !== currentUserId)
             .map((u: any) => {
               const unit = this.units.find((x: any) => x.id === u.unitId);
               const isHead = unit && unit.headOfUnitId === u.id;
@@ -521,4 +521,10 @@ export class ViolationKpiComponent implements OnInit {
   toggleAllUnitViolationExpansion(unitViolation: UnitViolationData): void {
     unitViolation.isExpanded = !unitViolation.isExpanded;
   }
+  // Hàm sắp xếp maxDeduction hiển thị từ lớn đến nhỏ
+  getSortedLevels() {
+  return [...(this.personalKpis[0]?.levels ?? [])]
+    .sort((a, b) => b.maxDeduction - a.maxDeduction);
+}
+
 }
