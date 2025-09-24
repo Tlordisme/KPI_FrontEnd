@@ -1,0 +1,50 @@
+<div class="ai-chat-container">
+  <!-- Icon -->
+  <div class="ai-icon-wrapper" (click)="toggleChat()">
+    <button class="ai-icon">
+      <img src="../../../../assets/ai.png" alt="AI" />
+    </button>
+    <div class="ai-label">Hỏi đáp với AI</div>
+  </div>
+
+  <!-- Overlay + Chatbox -->
+  <div *ngIf="isOpen" class="overlay">
+    <!-- Chatbox bên phải -->
+    <div class="chat-box">
+      <div class="chat-header">
+        <span>AI Assistant</span>
+        <button class="button-close" (click)="toggleChat()">x</button>
+      </div>
+
+      <div class="chat-messages">
+        <div
+          *ngFor="let msg of messages"
+          [class.user]="msg.from === 'user'"
+          [class.ai]="msg.from === 'ai'"
+        >
+          {{ msg.text }}
+        </div>
+      </div>
+      <!-- Hiển thị loading khi AI đang trả lời -->
+      <div *ngIf="isLoading" class="loading-msg">
+        <span class="text-load">Đang trả lời</span>
+        <span class="dot one">.</span>
+        <span class="dot two">.</span>
+        <span class="dot three">.</span>
+      </div>
+      <div class="chat-input">
+        <textarea
+          [(ngModel)]="userInput"
+          (input)="autoResize($event)"
+          (keydown.enter)="handleEnter($event)"
+          placeholder="Hỏi bất kỳ điều gì..."
+          rows="1"
+          class="chat-textarea"
+        ></textarea>
+        <button (click)="sendMessage()">
+          <mat-icon class="icon-input">north</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
