@@ -16,7 +16,7 @@
         <button class="button-close" (click)="toggleChat()">x</button>
       </div>
 
-      <div class="chat-messages">
+      <div class="chat-messages"#messagesContainer>
         <div
           *ngFor="let msg of messages"
           [class.user]="msg.from === 'user'"

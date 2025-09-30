@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewChecked  } from '@angular/core';
 import { AiService } from '../../../core/services/ai/ai.service';
 
 @Component({
@@ -6,7 +6,8 @@ import { AiService } from '../../../core/services/ai/ai.service';
   templateUrl: './ai-chat.component.html',
   styleUrls: ['./ai-chat.component.scss'],
 })
-export class AiChatComponent {
+export class AiChatComponent implements AfterViewChecked {
+  @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
   isOpen = false;
   isLoading = false;
   userInput = '';
@@ -61,5 +62,19 @@ export class AiChatComponent {
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = 'auto';
     textarea.style.height = textarea.scrollHeight + 'px';
+  }
+    // Auto scroll xuống cuối khi có tin nhắn mới
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+    private scrollToBottom(): void {
+    if (this.messagesContainer) {
+      try {
+        this.messagesContainer.nativeElement.scrollTo({
+          top: this.messagesContainer.nativeElement.scrollHeight,
+          behavior: 'smooth', // scroll mượt
+        });
+      } catch (err) {}
+    }
   }
 }
