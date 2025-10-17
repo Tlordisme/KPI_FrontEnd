@@ -1,23 +1,11 @@
 <div class="page">
-  <header class="header">
-    <div class="brand">
-      <img src="assets/logo.webp" class="logo" alt="Logo trường" />
-      <div class="brand-text">
-        <div class="brand-name">ĐẠI HỌC XÂY DỰNG</div>
-        <div class="brand-sub">Dashboard</div>
-      </div>
-    </div>
-    <div class="header-right">
-      <button class="bell" aria-label="Thông báo">🔔</button>
-      <div class="user">
-        <div class="user-name">{{ principal.name }}</div>
-        <div class="avatar"></div>
-      </div>
-    </div>
-  </header>
+  <app-ai-chat></app-ai-chat>
+  <app-topbar></app-topbar>
 
-
-  <app-sidebar [sidebarOpen]="sidebarOpen" (toggleSidebarEvent)="toggleSidebar()"></app-sidebar>
+  <app-sidebar
+    [sidebarOpen]="sidebarOpen"
+    (toggleSidebarEvent)="toggleSidebar()"
+  ></app-sidebar>
 
   <!-- Test -->
   <!-- <div class="menu-toggle-wrapper" [class.shift-right]="sidebarOpen">
@@ -51,9 +39,6 @@
   </aside> -->
 
   <!-- EndTesst -->
-
-
-
 
   <main class="grid">
     <section class="card profile">
@@ -238,5 +223,4 @@
       </div>
     </section>
   </main>
-  
 </div>
